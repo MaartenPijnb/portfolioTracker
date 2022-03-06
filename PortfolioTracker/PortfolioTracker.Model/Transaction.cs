@@ -9,5 +9,8 @@ namespace PortfolioTracker.Model
         public DateTime CreatedOn { get; set; }
         public string Symbol { get; set; }
         public CurrencyType CurencyType { get; set; }
+
+        public int AssetId{ get; set; }
+        public Asset Asset{ get; set; }
     }
 }
