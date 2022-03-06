@@ -3,13 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortfolioTracker.Server", "PortfolioTracker\Server\PortfolioTracker.Server.csproj", "{4314D127-DE52-4DCE-988D-E6ABB3791B48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioTracker.Server", "PortfolioTracker\Server\PortfolioTracker.Server.csproj", "{4314D127-DE52-4DCE-988D-E6ABB3791B48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortfolioTracker.Client", "PortfolioTracker\Client\PortfolioTracker.Client.csproj", "{B6EA9662-C7C6-41BE-A83B-FB278D6EE3B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioTracker.Client", "PortfolioTracker\Client\PortfolioTracker.Client.csproj", "{B6EA9662-C7C6-41BE-A83B-FB278D6EE3B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortfolioTracker.Shared", "PortfolioTracker\Shared\PortfolioTracker.Shared.csproj", "{A97307AA-4364-4F02-B8C8-77701803C05B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioTracker.Shared", "PortfolioTracker\Shared\PortfolioTracker.Shared.csproj", "{A97307AA-4364-4F02-B8C8-77701803C05B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortfolioTracker.Model", "PortfolioTracker.Model\PortfolioTracker.Model.csproj", "{EA838864-C883-476F-8A51-947780CE9B06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioTracker.Model", "PortfolioTracker.Model\PortfolioTracker.Model.csproj", "{EA838864-C883-476F-8A51-947780CE9B06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortfolioTracker.Degiro.Runner", "PortfolioTracker.Degiro.Runner\PortfolioTracker.Degiro.Runner.csproj", "{B8F84426-06C5-41FA-8BA8-08D32444AF57}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9AF7C3A8-9E53-4849-AC0F-F3B4ED5092E7}"
+	ProjectSection(SolutionItems) = preProject
+		TextFile1.txt = TextFile1.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +40,10 @@ Global
 		{EA838864-C883-476F-8A51-947780CE9B06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA838864-C883-476F-8A51-947780CE9B06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA838864-C883-476F-8A51-947780CE9B06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8F84426-06C5-41FA-8BA8-08D32444AF57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8F84426-06C5-41FA-8BA8-08D32444AF57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8F84426-06C5-41FA-8BA8-08D32444AF57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8F84426-06C5-41FA-8BA8-08D32444AF57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
