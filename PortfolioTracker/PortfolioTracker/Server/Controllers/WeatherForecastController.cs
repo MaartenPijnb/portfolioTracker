@@ -30,7 +30,7 @@ namespace PortfolioTracker.Server.Controllers
             _dbContext.Transactions.Add(new PortfolioTransaction
             {
                 CreatedOn = DateTime.Now,
-                Symbol = "IWDA"
+                //Symbo0l = "IWDA"
             });
 
             _dbContext.SaveChanges();

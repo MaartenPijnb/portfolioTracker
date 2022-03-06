@@ -10,6 +10,7 @@ namespace PortfolioTracker.Model
 
         }
         public DbSet<PortfolioTransaction> Transactions { get; set; }
+        public DbSet<Asset> Assets { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -47,6 +48,11 @@ namespace PortfolioTracker.Model
                 );
 
           
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(@"Data Source=.;Initial Catalog=PortfolioTracker;Integrated Security=True;");
         }
     }
 }

@@ -19,7 +19,7 @@ namespace PortfolioTracker.Degiro.Runner.Model
         public DateTime ValutaDate{ get; set; }
         public string? ProductName { get; set; }
         public string? ISIN { get; set; }
-        public string? Description{ get; set; }
+        public string Description{ get; set; }
         public string? FX { get; set; }
         public CurrencyType? Currency{ get; set; }
         public decimal? TotalPrice{ get; set; }
