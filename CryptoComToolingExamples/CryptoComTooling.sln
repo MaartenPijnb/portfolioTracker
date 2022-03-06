@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoComTooling", "CryptoComTooling\CryptoComTooling.csproj", "{9E4BC73A-630D-4A67-823D-E97BFA66A06A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitVavoparser", "BitVavoparser\BitVavoparser.csproj", "{7F5E4B30-15EC-4E54-AA3B-BD37E0DB2323}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9E4BC73A-630D-4A67-823D-E97BFA66A06A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E4BC73A-630D-4A67-823D-E97BFA66A06A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E4BC73A-630D-4A67-823D-E97BFA66A06A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E4BC73A-630D-4A67-823D-E97BFA66A06A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F5E4B30-15EC-4E54-AA3B-BD37E0DB2323}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F5E4B30-15EC-4E54-AA3B-BD37E0DB2323}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F5E4B30-15EC-4E54-AA3B-BD37E0DB2323}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F5E4B30-15EC-4E54-AA3B-BD37E0DB2323}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9E9F20DC-87A0-4D6A-B5B0-19213EB4EB98}
+	EndGlobalSection
+EndGlobal
