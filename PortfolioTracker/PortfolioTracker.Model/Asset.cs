@@ -14,7 +14,6 @@ namespace PortfolioTracker.Model
         public string SymbolForApi { get; set; }
         public decimal Value { get; set; }
         public DateTime UpdatedOn { get; set; }
-
         public int APIId { get; set; }
         public API API{ get; set; }
     }
