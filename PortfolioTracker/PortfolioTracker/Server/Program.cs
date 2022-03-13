@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
+using PortfolioTracker.Degiro.Runner.Controller;
 using PortfolioTracker.Model;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,9 +14,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<MPortfolioDBContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("PaijnzzzDB"), options => options.MigrationsAssembly("PortfolioTracker.Server"));
     });
+
+builder.Services.AddTransient<IDegiroController, DegiroController>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,6 +33,11 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");    
+});
 
 app.UseHttpsRedirection();
 

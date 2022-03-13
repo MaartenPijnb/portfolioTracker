@@ -97,7 +97,7 @@ namespace PortfolioTracker.Server.Migrations
                             ISN = "IE00B4L5Y983",
                             Name = "iShares Core MSCI World UCITS ETF USD (Acc)",
                             SymbolForApi = "IWDA.AS",
-                            UpdatedOn = new DateTime(2022, 3, 12, 18, 43, 10, 334, DateTimeKind.Local).AddTicks(8886),
+                            UpdatedOn = new DateTime(2022, 3, 13, 11, 27, 42, 577, DateTimeKind.Local).AddTicks(6383),
                             Value = 0m
                         },
                         new
@@ -107,73 +107,9 @@ namespace PortfolioTracker.Server.Migrations
                             ISN = "IE00B4L5YC18",
                             Name = "iShares MSCI EM UCITS ETF USD (Acc)",
                             SymbolForApi = "IEMA.AS",
-                            UpdatedOn = new DateTime(2022, 3, 12, 18, 43, 10, 334, DateTimeKind.Local).AddTicks(8914),
+                            UpdatedOn = new DateTime(2022, 3, 13, 11, 27, 42, 577, DateTimeKind.Local).AddTicks(6416),
                             Value = 0m
                         });
-                });
-
-            modelBuilder.Entity("PortfolioTracker.Model.Portfolio", b =>
-                {
-                    b.Property<int>("PortfolioId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PortfolioId"), 1L, 1);
-
-                    b.Property<int>("AssetID")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("AveragePricePerShare")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("ProfitPercentage")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalInvestedValue")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalShares")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalValue")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("PortfolioId");
-
-                    b.HasIndex("AssetID");
-
-                    b.ToTable("Portfolio");
-                });
-
-            modelBuilder.Entity("PortfolioTracker.Model.PortfolioHistory", b =>
-                {
-                    b.Property<int>("PortfolioHistoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PortfolioHistoryId"), 1L, 1);
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("Percentage")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Profit")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalInvestedPortfolioValue")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalPortfolioValue")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("PortfolioHistoryId");
-
-                    b.ToTable("PortfolioHistory");
                 });
 
             modelBuilder.Entity("PortfolioTracker.Model.PortfolioTransaction", b =>
@@ -230,17 +166,6 @@ namespace PortfolioTracker.Server.Migrations
                         .IsRequired();
 
                     b.Navigation("API");
-                });
-
-            modelBuilder.Entity("PortfolioTracker.Model.Portfolio", b =>
-                {
-                    b.HasOne("PortfolioTracker.Model.Asset", "Asset")
-                        .WithMany()
-                        .HasForeignKey("AssetID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Asset");
                 });
 
             modelBuilder.Entity("PortfolioTracker.Model.PortfolioTransaction", b =>

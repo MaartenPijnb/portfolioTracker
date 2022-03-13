@@ -13,12 +13,9 @@ namespace PortfolioTracker.Model
         public Asset Asset { get; set; }
         public decimal TotalShares { get; set; }
         public decimal AveragePricePerShare{ get; set; }
-        public decimal ProfitPercentage { get; set; }
-        public decimal TotalValue { get; set; }
         public decimal TotalInvestedValue { get; set; }
+        public decimal TotalValue { get; set; }
+        public decimal ProfitPercentage { get; set; }
         public DateTime UpdatedOn { get; set; } = DateTime.Now;
-
-
-
     }
 }

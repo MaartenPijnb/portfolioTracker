@@ -39,18 +39,21 @@ foreach (var item in transactionGroupByAsset)
 {
     var portfolio = dbContext.Portfolio.FirstOrDefault(x => x.AssetID == item.Key);
     bool isUpdate = false;
-    if (portfolio == null)
+    if (portfolio != null)
     {
         isUpdate = true;
+    }
+    else
+    {
         portfolio = new Portfolio();
     }
 
     portfolio.TotalShares = item.Sum(x => x.AmountOfShares);
     portfolio.TotalInvestedValue = item.Sum(x => x.TotalCosts);
     portfolio.AveragePricePerShare = item.Average(x => x.PricePerShare);
-    portfolio.TotalValue = portfolio.AveragePricePerShare * portfolio.TotalShares;
+    portfolio.TotalValue = dbContext.Assets.Single(x=>x.AssetId== item.Key).Value * portfolio.TotalShares;
     portfolio.AssetID = item.Key;
-    portfolio.ProfitPercentage = 100 - portfolio.TotalValue / portfolio.TotalInvestedValue * 100;
+    portfolio.ProfitPercentage =  (portfolio.TotalValue - portfolio.TotalInvestedValue) / portfolio.TotalInvestedValue  * 100;
 
     if (isUpdate)
     {
@@ -61,6 +64,19 @@ foreach (var item in transactionGroupByAsset)
         await dbContext.Portfolio.AddAsync(portfolio);
     }
 }
-    
+
 await dbContext.SaveChangesAsync();
+
+//create portfolio history
+var portfolios = dbContext.Portfolio.ToList();
+var portfolioHistory = new PortfolioHistory
+{
+    TotalInvestedPortfolioValue = portfolios.Sum(x => x.TotalInvestedValue),
+    TotalPortfolioValue = portfolios.Sum(x => x.TotalValue)
+};
+portfolioHistory.Profit = portfolioHistory.TotalPortfolioValue - portfolioHistory.TotalInvestedPortfolioValue;
+portfolioHistory.Percentage = (portfolioHistory.TotalPortfolioValue - portfolioHistory.TotalInvestedPortfolioValue) / portfolioHistory.TotalInvestedPortfolioValue * 100;
+await dbContext.PortfolioHistory.AddAsync(portfolioHistory);
+await dbContext.SaveChangesAsync();
+
 Console.ReadLine();

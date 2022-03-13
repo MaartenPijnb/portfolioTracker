@@ -27,14 +27,7 @@ namespace PortfolioTracker.Server.Controllers
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
-            _dbContext.Transactions.Add(new PortfolioTransaction
-            {
-                CreatedOn = DateTime.Now,
-                //Symbo0l = "IWDA"
-            });
-
-            _dbContext.SaveChanges();
-
+    
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),

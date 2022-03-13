@@ -1,0 +1,29 @@
+﻿@page "/import"
+<h3>Import</h3>
+<p>Import your degiro account here: (.csv file)</p>
+
+<p>
+    <label>
+        Upload Degiro file:
+        <InputFile OnChange="@OnInputFileChange" multiple />
+    </label>
+</p>
+
+
+@code {
+    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        var allowedFiles = 1;
+        var maxFileSize = 1024 * 1024 * 15; // 15mb
+
+        var file = e.File;
+        if(file.Size > maxFileSize)
+        {
+            throw new NotSupportedException("File Size must be smaller than 15mb");
+        }
+
+
+    }
+
+        
+}

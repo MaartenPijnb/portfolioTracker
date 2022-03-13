@@ -1,2 +1,7 @@
 yahoo finance api key
 6PoQCJV9O17jeUPS81UDN1sHJ86gKB4RahYraKSS
+
+
+12345623@#@#Pdks
+
+Server=tcp:paijnzzz.database.windows.net,1433;Initial Catalog=MPortfolio;Persist Security Info=False;User ID=CloudSAb3fa7d72;Password={your_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
