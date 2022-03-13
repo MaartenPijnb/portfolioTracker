@@ -12,7 +12,7 @@ var serializeOptions = new JsonSerializerOptions
 {
     PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     PropertyNameCaseInsensitive = true
-    
+
 };
 var quoteResponse = await httpClient.GetFromJsonAsync<Root>("https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=IWDA.AS,IEMA.AS", serializeOptions);
 var dbContext = new MPortfolioDBContext(new Microsoft.EntityFrameworkCore.DbContextOptions<MPortfolioDBContext>());
@@ -32,25 +32,35 @@ await dbContext.SaveChangesAsync();
 
 //put this to playground
 
-var portfolioHistory = new PortfolioHistory();
 var transactions = dbContext.Transactions.ToList();
-portfolioHistory.TotalInvestedPortfolioValue = transactions.Sum(y => y.TotalCosts);
 var transactionGroupByAsset = transactions.GroupBy(x => x.AssetId);
 decimal totalValue = 0;
 foreach (var item in transactionGroupByAsset)
 {
-    decimal totalShares = 0;
-    foreach (var portfolioItem in item)
+    var portfolio = dbContext.Portfolio.FirstOrDefault(x => x.AssetID == item.Key);
+    bool isUpdate = false;
+    if (portfolio == null)
     {
-        totalShares += portfolioItem.AmountOfShares;
+        isUpdate = true;
+        portfolio = new Portfolio();
     }
-    var asset = dbContext.Assets.Single(x => x.AssetId == item.Key);
-    totalValue += asset.Value * totalShares;
-}
-portfolioHistory.TotalPortfolioValue = totalValue;
-portfolioHistory.Profit = portfolioHistory.TotalPortfolioValue - portfolioHistory.TotalInvestedPortfolioValue;
-portfolioHistory.Percentage = 100 - (portfolioHistory.TotalInvestedPortfolioValue / portfolioHistory.TotalPortfolioValue * 100);
-await dbContext.PortfolioHistory.AddAsync(portfolioHistory);
 
+    portfolio.TotalShares = item.Sum(x => x.AmountOfShares);
+    portfolio.TotalInvestedValue = item.Sum(x => x.TotalCosts);
+    portfolio.AveragePricePerShare = item.Average(x => x.PricePerShare);
+    portfolio.TotalValue = portfolio.AveragePricePerShare * portfolio.TotalShares;
+    portfolio.AssetID = item.Key;
+    portfolio.ProfitPercentage = 100 - portfolio.TotalValue / portfolio.TotalInvestedValue * 100;
+
+    if (isUpdate)
+    {
+        dbContext.Portfolio.Update(portfolio);
+    }
+    else
+    {
+        await dbContext.Portfolio.AddAsync(portfolio);
+    }
+}
+    
 await dbContext.SaveChangesAsync();
 Console.ReadLine();

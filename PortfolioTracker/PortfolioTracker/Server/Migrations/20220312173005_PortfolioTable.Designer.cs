@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PortfolioTracker.Model;
 
@@ -11,9 +12,10 @@ using PortfolioTracker.Model;
 namespace PortfolioTracker.Server.Migrations
 {
     [DbContext(typeof(MPortfolioDBContext))]
-    partial class MPortfolioDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220312173005_PortfolioTable")]
+    partial class PortfolioTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,7 +99,7 @@ namespace PortfolioTracker.Server.Migrations
                             ISN = "IE00B4L5Y983",
                             Name = "iShares Core MSCI World UCITS ETF USD (Acc)",
                             SymbolForApi = "IWDA.AS",
-                            UpdatedOn = new DateTime(2022, 3, 12, 18, 43, 10, 334, DateTimeKind.Local).AddTicks(8886),
+                            UpdatedOn = new DateTime(2022, 3, 12, 18, 30, 3, 443, DateTimeKind.Local).AddTicks(4139),
                             Value = 0m
                         },
                         new
@@ -107,7 +109,7 @@ namespace PortfolioTracker.Server.Migrations
                             ISN = "IE00B4L5YC18",
                             Name = "iShares MSCI EM UCITS ETF USD (Acc)",
                             SymbolForApi = "IEMA.AS",
-                            UpdatedOn = new DateTime(2022, 3, 12, 18, 43, 10, 334, DateTimeKind.Local).AddTicks(8914),
+                            UpdatedOn = new DateTime(2022, 3, 12, 18, 30, 3, 443, DateTimeKind.Local).AddTicks(4172),
                             Value = 0m
                         });
                 });
@@ -127,9 +129,6 @@ namespace PortfolioTracker.Server.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ProfitPercentage")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("TotalInvestedValue")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotalShares")
