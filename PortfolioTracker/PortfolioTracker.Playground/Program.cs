@@ -12,7 +12,6 @@ var serializeOptions = new JsonSerializerOptions
 {
     PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     PropertyNameCaseInsensitive = true
-
 };
 var quoteResponse = await httpClient.GetFromJsonAsync<Root>("https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=IWDA.AS,IEMA.AS", serializeOptions);
 var dbContext = new MPortfolioDBContext(new Microsoft.EntityFrameworkCore.DbContextOptions<MPortfolioDBContext>());

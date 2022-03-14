@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using PortfolioTracker.Degiro.Runner.Controller;
+using PortfolioTracker.Implementation.APIs;
 using PortfolioTracker.Model;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +29,7 @@ builder.Services.AddDbContext<MPortfolioDBContext>(options => {
     });
 #endif 
 
+builder.Services.AddHttpClient<IYahooFinanceClient, YahooFinanceClient>();
 builder.Services.AddTransient<IDegiroController, DegiroController>();
 var app = builder.Build();
 

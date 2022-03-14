@@ -11,6 +11,7 @@ namespace PortfolioTracker.Model
         }
         public DbSet<PortfolioTransaction> Transactions { get; set; }
         public DbSet<Asset> Assets { get; set; }
+        public DbSet<API> APIs { get; set; }
         public DbSet<PortfolioHistory> PortfolioHistory{ get; set; }
         public DbSet<Portfolio> Portfolio { get; set; }
 
