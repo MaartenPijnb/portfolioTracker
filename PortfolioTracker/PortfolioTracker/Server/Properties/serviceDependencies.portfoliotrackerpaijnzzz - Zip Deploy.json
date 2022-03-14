@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/paijnzzz/databases/MPortfolio",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:PaijnzzzDB",
+      "secretStore": "AzureAppSettings"
+    }
+  }
+}

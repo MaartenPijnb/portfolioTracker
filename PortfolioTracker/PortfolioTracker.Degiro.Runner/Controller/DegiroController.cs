@@ -1,6 +1,7 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PortfolioTracker.Degiro.Runner.Model;
 using PortfolioTracker.Model;
 using System;
@@ -15,14 +16,18 @@ namespace PortfolioTracker.Degiro.Runner.Controller
     public class DegiroController: IDegiroController
     {
         private readonly MPortfolioDBContext _dbContext;
+        private readonly ILogger<DegiroController> _logger;
 
-        public DegiroController(MPortfolioDBContext dbContext)
+        public DegiroController(MPortfolioDBContext dbContext, ILogger<DegiroController> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
         }
 
         public async Task ImportDegiro(StreamReader degiroCsvStream)
         {
+            //todo haal weg
+            _logger.LogWarning("Connectionstring" + _dbContext.Database.GetConnectionString());
             var csvConfiguration = new CsvConfiguration(CultureInfo.GetCultureInfo("nl-NL"))
             {
                 Delimiter = ",",
