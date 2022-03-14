@@ -26,8 +26,6 @@ namespace PortfolioTracker.Degiro.Runner.Controller
 
         public async Task ImportDegiro(StreamReader degiroCsvStream)
         {
-            //todo haal weg
-            _logger.LogWarning("Connectionstring" + _dbContext.Database.GetConnectionString());
             var csvConfiguration = new CsvConfiguration(CultureInfo.GetCultureInfo("nl-NL"))
             {
                 Delimiter = ",",

@@ -51,10 +51,5 @@ namespace PortfolioTracker.Model
 
           
         }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(@"Data Source=.;Initial Catalog=PortfolioTracker;Integrated Security=True;");
-        }
     }
 }

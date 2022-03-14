@@ -16,9 +16,17 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddSwaggerGen();
+#if DEBUG
 builder.Services.AddDbContext<MPortfolioDBContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("PaijnzzzDB"), options => options.MigrationsAssembly("PortfolioTracker.Server"));
     });
+#endif
+
+#if RELEASE
+builder.Services.AddDbContext<MPortfolioDBContext>(options => {
+    options.UseSqlServer(Environment.GetEnvironmentVariable("SQLAZURECONNSTR_PaijnzzzDB"), options => options.MigrationsAssembly("PortfolioTracker.Server"));
+    });
+#endif 
 
 builder.Services.AddTransient<IDegiroController, DegiroController>();
 var app = builder.Build();
