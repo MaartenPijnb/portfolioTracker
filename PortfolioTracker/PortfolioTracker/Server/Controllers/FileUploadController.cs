@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PortfolioTracker.Degiro.Runner.Controller;
+using PortfolioTracker.Implementation.Services;
 
 namespace PortfolioTracker.Server.Controllers
 {
@@ -9,11 +10,15 @@ namespace PortfolioTracker.Server.Controllers
     {
         private readonly IDegiroController _degiroController;
         private readonly ILogger<FileUploadController> _logger;
+        private readonly IAssetService _assetService;
+        private readonly IPortfolioService _portfolioService;
 
-        public FileUploadController(IDegiroController degiroController, ILogger<FileUploadController> logger)
+        public FileUploadController(IDegiroController degiroController, ILogger<FileUploadController> logger, IAssetService assetService, IPortfolioService portfolioService)
         {
             _degiroController = degiroController ?? throw new ArgumentNullException(nameof(degiroController));
             _logger = logger;
+            _assetService = assetService;
+            _portfolioService = portfolioService;
         }
 
         [HttpPost]
@@ -26,6 +31,14 @@ namespace PortfolioTracker.Server.Controllers
                 return Ok();
             }
             return BadRequest();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            await _assetService.UpdateAssets();
+            await _portfolioService.UpdatePortfolio();
+            return Ok();
         }
     }
 }

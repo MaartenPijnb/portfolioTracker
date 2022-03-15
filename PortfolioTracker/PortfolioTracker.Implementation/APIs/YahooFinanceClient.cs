@@ -31,7 +31,7 @@ namespace PortfolioTracker.Implementation.APIs
         public async Task<YahooFinanceRootResult> GetYahooFinanceRootResultForSymbols(List<string> symbols)
         {
             var symbolsAsString = string.Join(",", symbols );
-            return await _httpclient.GetFromJsonAsync<YahooFinanceRootResult>(_httpclient.BaseAddress + "/v6/finance/quote?region=US&lang=en&symbols=" + symbolsAsString, _serializeOptions);
+            return await _httpclient.GetFromJsonAsync<YahooFinanceRootResult>(_httpclient.BaseAddress + "v6/finance/quote?region=US&lang=en&symbols=" + symbolsAsString, _serializeOptions);
         }
 
         private void InitializeAPI()
