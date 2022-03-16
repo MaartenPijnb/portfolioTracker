@@ -12,13 +12,15 @@ namespace PortfolioTracker.Server.Controllers
         private readonly ILogger<FileUploadController> _logger;
         private readonly IAssetService _assetService;
         private readonly IPortfolioService _portfolioService;
+        private readonly IPortfolioHistoryService _portfolioHistoryService;
 
-        public FileUploadController(IDegiroController degiroController, ILogger<FileUploadController> logger, IAssetService assetService, IPortfolioService portfolioService)
+        public FileUploadController(IDegiroController degiroController, ILogger<FileUploadController> logger, IAssetService assetService, IPortfolioService portfolioService, IPortfolioHistoryService portfolioHistoryService)
         {
-            _degiroController = degiroController ?? throw new ArgumentNullException(nameof(degiroController));
+            _degiroController = degiroController;
             _logger = logger;
             _assetService = assetService;
             _portfolioService = portfolioService;
+            _portfolioHistoryService = portfolioHistoryService;
         }
 
         [HttpPost]
@@ -38,6 +40,7 @@ namespace PortfolioTracker.Server.Controllers
         {
             await _assetService.UpdateAssets();
             await _portfolioService.UpdatePortfolio();
+            await _portfolioHistoryService.CreatePortfolioHistory();
             return Ok();
         }
     }

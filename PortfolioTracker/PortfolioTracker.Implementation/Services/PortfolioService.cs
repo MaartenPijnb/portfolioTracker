@@ -39,6 +39,7 @@ namespace PortfolioTracker.Implementation.Services
                 portfolio.TotalValue = _dbContext.Assets.Single(x => x.AssetId == item.Key).Value * portfolio.TotalShares;
                 portfolio.AssetID = item.Key;
                 portfolio.ProfitPercentage = (portfolio.TotalValue - portfolio.TotalInvestedValue) / portfolio.TotalInvestedValue * 100;
+                portfolio.Profit = portfolio.TotalValue - portfolio.TotalInvestedValue;
 
                 if (isUpdate)
                 {

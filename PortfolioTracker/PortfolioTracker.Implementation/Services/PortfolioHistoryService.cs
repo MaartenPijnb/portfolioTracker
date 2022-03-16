@@ -15,9 +15,18 @@ namespace PortfolioTracker.Implementation.Services
         {
             _dbContext = dbContext;
         }
-        public Task CreatePortfolioHistory()
+        public async Task CreatePortfolioHistory()
         {
-            throw new NotImplementedException();
+            var portfolios = _dbContext.Portfolio.ToList();
+            var portfolioHistory = new PortfolioHistory
+            {
+                TotalInvestedPortfolioValue = portfolios.Sum(x => x.TotalInvestedValue),
+                TotalPortfolioValue = portfolios.Sum(x => x.TotalValue)
+            };
+            portfolioHistory.Profit = portfolioHistory.TotalPortfolioValue - portfolioHistory.TotalInvestedPortfolioValue;
+            portfolioHistory.Percentage = (portfolioHistory.TotalPortfolioValue - portfolioHistory.TotalInvestedPortfolioValue) / portfolioHistory.TotalInvestedPortfolioValue * 100;
+            await _dbContext.PortfolioHistory.AddAsync(portfolioHistory);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

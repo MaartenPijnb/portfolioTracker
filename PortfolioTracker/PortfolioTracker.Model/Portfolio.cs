@@ -16,6 +16,7 @@ namespace PortfolioTracker.Model
         public decimal TotalInvestedValue { get; set; }
         public decimal TotalValue { get; set; }
         public decimal ProfitPercentage { get; set; }
+        public decimal Profit { get; set; }
         public DateTime UpdatedOn { get; set; } = DateTime.Now;
     }
 }
