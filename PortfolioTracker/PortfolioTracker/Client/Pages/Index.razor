@@ -1,8 +1,35 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+@using Microsoft.EntityFrameworkCore
+
+@inject MPortfolioDBContext dbContext
+
+
+<PageTitle>Portfolio Tracker</PageTitle>
 
 <h1>Portfolio Tracker</h1>
 
-Welcome to your new app.
 
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                Data="@portfolios" TItem="Portfolio" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+    <Columns>
+
+        @*<RadzenDataGridColumn TItem="Employee" Title="Photo" Frozen="true" Sortable="false" Filterable="false" Width="60px" >
+            <Template Context="data">
+            <RadzenImage Path="@data.Photo" style="width: 40px; height: 40px; border-radius: 8px;" />
+            </Template>
+            </RadzenDataGridColumn>*@
+        <RadzenDataGridColumn TItem="Portfolio" Property="Asset.Name" Title="Asset" />
+        <RadzenDataGridColumn TItem="Portfolio" Property="TotalValue" Title="Huidige waarde" />
+        <RadzenDataGridColumn TItem="Portfolio" Property="Profit" Title="Winst / Verlies" />
+        <RadzenDataGridColumn TItem="Portfolio" Property="ProfitPercentage" Title="%" />
+    </Columns>
+</RadzenDataGrid>
+@code {
+    IEnumerable<Portfolio> portfolios;
+
+    protected override void OnInitialized()
+    {
+        portfolios = dbContext.Portfolio;
+    }
+}
