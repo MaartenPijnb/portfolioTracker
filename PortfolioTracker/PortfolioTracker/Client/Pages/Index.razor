@@ -1,15 +1,15 @@
 ﻿@page "/"
 
 @using Microsoft.EntityFrameworkCore
+@using System.Globalization
 
-@inject MPortfolioDBContext dbContext
-
+@inject HttpClient Http
 
 <PageTitle>Portfolio Tracker</PageTitle>
 
-<h1>Portfolio Tracker</h1>
+<h1>Portfolio Tracker - Beta 0.0</h1>
 
-
+<h3>Huidig portfolio:</h3>
 <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                 Data="@portfolios" TItem="Portfolio" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
     <Columns>
@@ -19,17 +19,65 @@
             <RadzenImage Path="@data.Photo" style="width: 40px; height: 40px; border-radius: 8px;" />
             </Template>
             </RadzenDataGridColumn>*@
-        <RadzenDataGridColumn TItem="Portfolio" Property="Asset.Name" Title="Asset" />
+        <RadzenDataGridColumn TItem="Portfolio" Property="Asset.Name" Title="Asset" Width="400px" />
         <RadzenDataGridColumn TItem="Portfolio" Property="TotalValue" Title="Huidige waarde" />
         <RadzenDataGridColumn TItem="Portfolio" Property="Profit" Title="Winst / Verlies" />
         <RadzenDataGridColumn TItem="Portfolio" Property="ProfitPercentage" Title="%" />
     </Columns>
 </RadzenDataGrid>
+
+<h3>Portfolio history:</h3>
+<div class="container my-5">
+    <div class="row">
+        <div class="col">
+            <RadzenChart>
+                <RadzenAreaSeries Smooth="true" Data="@totalInvestedValue" CategoryProperty="Date" Title="Total Invested" ValueProperty="Revenue" RenderingOrder="1">
+                </RadzenAreaSeries>
+                <RadzenAreaSeries Smooth="true" Data="@totalPortfolioValue" CategoryProperty="Date" Title="Total Value" ValueProperty="Revenue">
+                </RadzenAreaSeries>
+                <RadzenCategoryAxis Padding="20" FormatString="{0:MMM yyyy}" />
+                <RadzenValueAxis Formatter="@FormatAsEuro">
+                    <RadzenGridLines Visible="true" />
+                    <RadzenAxisTitle Text="Revenue in Euro" />
+                </RadzenValueAxis>
+            </RadzenChart>
+        </div>
+    </div>
+</div>
 @code {
     IEnumerable<Portfolio> portfolios;
+    IEnumerable<PortfolioHistory> portfoliohistories;
+    List<DataItem> totalInvestedValue, totalPortfolioValue;
 
-    protected override void OnInitialized()
+
+    protected override async Task OnInitializedAsync()
     {
-        portfolios = dbContext.Portfolio;
+        portfolios = await Http.GetFromJsonAsync<IEnumerable<Portfolio>>("Portfolio");
+        portfoliohistories = await Http.GetFromJsonAsync<IEnumerable<PortfolioHistory>>("Portfolio/PortfolioHistory");
+
+        totalInvestedValue = portfoliohistories.Select(x => new DataItem
+            {
+                Date = x.Date,
+                Revenue = Convert.ToDouble(x.TotalInvestedPortfolioValue)
+            }).ToList();
+
+        totalPortfolioValue = portfoliohistories.Select(x => new DataItem
+            {
+                Date = x.Date,
+                Revenue = Convert.ToDouble(x.TotalPortfolioValue)
+            }).ToList();
     }
+
+    bool smooth = true;
+    class DataItem
+    {
+        public DateTime Date { get; set; }
+        public double Revenue { get; set; }
+    }
+
+    string FormatAsEuro(object value)
+    {
+        return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("nl-NL"));
+    }
+
 }
