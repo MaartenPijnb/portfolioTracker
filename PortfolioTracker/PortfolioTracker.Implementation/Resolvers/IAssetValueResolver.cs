@@ -1,4 +1,5 @@
-﻿using PortfolioTracker.Model;
+﻿using PortfolioTracker.Implementation.Models;
+using PortfolioTracker.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace PortfolioTracker.Implementation.Resolvers
     public interface IAssetValueResolver
     {
         Task<List<double>> GetAssetValue(APIType apiType, List<string> symbols);
+        Task<List<AssetHistory>> GetAssetValueHistory(APIType apiType, IEnumerable<string> symbols);
     }
 }

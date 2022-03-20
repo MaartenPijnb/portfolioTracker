@@ -1,4 +1,5 @@
 ﻿using PortfolioTracker.Implementation.Models.Yahoo;
+using PortfolioTracker.Implementation.Models.Yahoo.V8History;
 using PortfolioTracker.Model;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,13 @@ namespace PortfolioTracker.Implementation.APIs
 
             InitializeAPI();
         }
+
+        public async Task<AssetHistoryResponse> GetAssetHistoryRespone(IEnumerable<string> symbols)
+        {
+            var symbolsAsString = string.Join(",", symbols);
+            return await _httpclient.GetFromJsonAsync<AssetHistoryResponse>(_httpclient.BaseAddress + "v8/finance/spark?interval=1d&range=5y&symbols=" + symbolsAsString, _serializeOptions);
+        }
+
         public async Task<YahooFinanceRootResult> GetYahooFinanceRootResultForSymbols(List<string> symbols)
         {
             var symbolsAsString = string.Join(",", symbols );

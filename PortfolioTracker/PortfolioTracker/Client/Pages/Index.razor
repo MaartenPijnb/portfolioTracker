@@ -11,7 +11,7 @@
 
 <h3>Huidig portfolio:</h3>
 <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                Data="@portfolios" TItem="Portfolio" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+                Data="@portfolios" TItem="Portfolio" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" >
     <Columns>
 
         @*<RadzenDataGridColumn TItem="Employee" Title="Photo" Frozen="true" Sortable="false" Filterable="false" Width="60px" >
@@ -27,14 +27,59 @@
 </RadzenDataGrid>
 
 <h3>Portfolio history:</h3>
+
+    <div class="row">
+        <div class="col-md-3 p-3">
+            <RadzenCard class="rz-card-portfoliohistory"> 
+                <h4 class="mb-3">Total value</h4>
+               
+            </RadzenCard>
+        </div>
+        <div class="col-md-3 p-3">
+            <RadzenCard class="rz-card-portfoliohistory"> 
+                <h4 class="mb-3">Profit</h4>
+                
+            </RadzenCard>
+        </div>
+        <div class="col-md-3 p-3">
+            <RadzenCard class="rz-card-portfoliohistory"> 
+                <h4 class="mb-3">Total transaction costs</h4>
+              
+            </RadzenCard>
+        </div>
+             <div class="col-md-3 p-3">
+            <RadzenCard class="rz-card-portfoliohistory"> 
+                <h4 class="mb-3">Total percentage</h4>
+              
+            </RadzenCard>
+        </div>
+    </div>
+
 <div class="container my-5">
     <div class="row">
         <div class="col">
             <RadzenChart>
                 <RadzenAreaSeries Smooth="true" Data="@totalInvestedValue" CategoryProperty="Date" Title="Total Invested" ValueProperty="Revenue" RenderingOrder="1">
+                    <TooltipTemplate Context="data">
+                        <p>
+                            <h6>@data.Date.ToString("dd MMM yyyy")</h6>
+                            Total invested: @data.Revenue € 
+                            <br>
+                            Total profit: @data.Profit €
+                        </p>
+                    </TooltipTemplate>
                 </RadzenAreaSeries>
                 <RadzenAreaSeries Smooth="true" Data="@totalPortfolioValue" CategoryProperty="Date" Title="Total Value" ValueProperty="Revenue">
+                    <TooltipTemplate Context="data">
+                        <p>
+                            <h6>@data.Date.ToString("dd MMM yyyy")</h6>
+                            Total portfolio value: @data.Revenue €
+                             <br>   
+                            Total Profit: @data.Profit €
+                        </p>
+                    </TooltipTemplate>
                 </RadzenAreaSeries>
+
                 <RadzenCategoryAxis Padding="20" FormatString="{0:MMM yyyy}" />
                 <RadzenValueAxis Formatter="@FormatAsEuro">
                     <RadzenGridLines Visible="true" />
@@ -58,14 +103,18 @@
         totalInvestedValue = portfoliohistories.Select(x => new DataItem
             {
                 Date = x.Date,
-                Revenue = Convert.ToDouble(x.TotalInvestedPortfolioValue)
+                Revenue = Convert.ToDouble(x.TotalInvestedPortfolioValue),
+                Profit = Convert.ToDouble(x.Profit)
             }).ToList();
 
         totalPortfolioValue = portfoliohistories.Select(x => new DataItem
             {
                 Date = x.Date,
-                Revenue = Convert.ToDouble(x.TotalPortfolioValue)
+                Revenue = Convert.ToDouble(x.TotalPortfolioValue),
+                Profit = Convert.ToDouble(x.Profit)
+
             }).ToList();
+
     }
 
     bool smooth = true;
@@ -73,6 +122,7 @@
     {
         public DateTime Date { get; set; }
         public double Revenue { get; set; }
+        public double Profit { get; set; }
     }
 
     string FormatAsEuro(object value)

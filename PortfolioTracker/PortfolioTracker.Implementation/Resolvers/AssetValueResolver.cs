@@ -1,4 +1,5 @@
 ﻿using PortfolioTracker.Implementation.APIs;
+using PortfolioTracker.Implementation.Models;
 using PortfolioTracker.Model;
 using System;
 using System.Collections.Generic;
@@ -30,5 +31,41 @@ namespace PortfolioTracker.Implementation.Resolvers
                     throw new NotSupportedException();
             }
         }
+
+        //TODO: Properly refactor the model to support dynamic symbols.
+        public async Task<List<AssetHistory>> GetAssetValueHistory(APIType apiType, IEnumerable<string> symbols)
+        {
+            List<AssetHistory> response = new();
+            switch (apiType)
+            {
+                case APIType.YAHOOFINANCE:
+                    var assetHistoryResponse = await _yahooFinanceClient.GetAssetHistoryRespone(symbols);
+
+                    var assetHistoryIWDA = new AssetHistory();
+                    assetHistoryIWDA.SymbolName = "IWDA.AS";
+                    for (int i = 0; i < assetHistoryResponse.AssetHistoriesIWDA.Timestamp.Count; i++)
+                    {
+                        var datetimeoffset = DateTimeOffset.FromUnixTimeSeconds(assetHistoryResponse.AssetHistoriesIWDA.Timestamp[i]);
+                        assetHistoryIWDA.AssetHistoryValues.Add(datetimeoffset.Date, assetHistoryResponse.AssetHistoriesIWDA.Close[i]);
+                    }
+
+                    var assetHistoryIEMA = new AssetHistory();
+                    assetHistoryIEMA.SymbolName = "IEMA.AS";
+                    for (int i = 0; i < assetHistoryResponse.AssetHistoriesIEMA.Timestamp.Count; i++)
+                    {
+                        var datetimeoffset = DateTimeOffset.FromUnixTimeSeconds(assetHistoryResponse.AssetHistoriesIEMA.Timestamp[i]);
+                        assetHistoryIEMA.AssetHistoryValues.Add(datetimeoffset.Date, assetHistoryResponse.AssetHistoriesIEMA.Close[i]);
+                    }
+                    response.Add(assetHistoryIWDA);
+                    response.Add(assetHistoryIEMA);
+                    return response;         
+
+                case APIType.BINANCE:
+                    throw new NotImplementedException($"{apiType.ToString()} is not supported");
+                default:
+                    throw new NotSupportedException();
+            }
+        }
     }
 }
+
