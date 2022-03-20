@@ -7,9 +7,51 @@
 
 <PageTitle>Portfolio Tracker</PageTitle>
 
-<h1>Portfolio Tracker - Beta 0.0</h1>
+<h1>Portfolio Tracker - Beta 0.1</h1>
 
 <h3>Huidig portfolio:</h3>
+
+ <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <RadzenChart>
+                    <RadzenDonutSeries Data="@piePortfolioItems" CategoryProperty="SymbolName" ValueProperty="Percentage">
+                        <TitleTemplate>
+                            <div class="rz-donut-content">
+                                <div>Portfolio</div> 
+                                <div>distribution</div>
+                            </div>
+                        </TitleTemplate>
+                              <TooltipTemplate Context="data">
+                        <p>
+                         @data.Name <br />
+                         @decimal.Round(data.Percentage,2) %
+                        </p>
+                    </TooltipTemplate>
+                    </RadzenDonutSeries>
+                </RadzenChart>
+            </div>
+            <div class="col-sm-6">
+                <RadzenChart>
+                    <RadzenDonutSeries Data="@assetTypePortfolioItems" CategoryProperty="SymbolName" ValueProperty="Percentage">
+                        <TitleTemplate>
+                            <div class="rz-donut-content">
+                                <div>Asset</div> 
+                                <div>distribution</div>
+                            </div>
+                        </TitleTemplate>
+                              <TooltipTemplate Context="data">
+                        <p>
+                         @data.Name <br />
+                         @decimal.Round(data.Percentage,2) %
+                        </p>
+                    </TooltipTemplate>
+                    </RadzenDonutSeries>
+                </RadzenChart>
+            </div>
+        </div>
+    </div>
+
 <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                 Data="@portfolios" TItem="Portfolio" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" >
     <Columns>
@@ -32,25 +74,25 @@
         <div class="col-md-3 p-3">
             <RadzenCard class="rz-card-portfoliohistory"> 
                 <h4 class="mb-3">Total value</h4>
-               <p> wat geld</p>
+               <p>€ @totalValue</p>
             </RadzenCard>
         </div>
         <div class="col-md-3 p-3">
             <RadzenCard class="rz-card-portfoliohistory"> 
                 <h4 class="mb-3">Profit</h4>
-                <p> wat geld</p>
+                <p>€ @totalCosts </p>
             </RadzenCard>
         </div>
         <div class="col-md-3 p-3">
             <RadzenCard class="rz-card-portfoliohistory"> 
                 <h4 class="mb-3">Total transaction costs</h4>
-              <p> wat geld</p>
+              <p>€ 10</p>
             </RadzenCard>
         </div>
              <div class="col-md-3 p-3">
             <RadzenCard class="rz-card-portfoliohistory"> 
                 <h4 class="mb-3">Total percentage</h4>
-              <p> wat geld</p>
+              <p>100%</p>
             </RadzenCard>
         </div>
     </div>
@@ -93,6 +135,8 @@
     IEnumerable<Portfolio> portfolios;
     IEnumerable<PortfolioHistory> portfoliohistories;
     List<DataItem> totalInvestedValue, totalPortfolioValue;
+    List<PiePortfolioItem> piePortfolioItems, assetTypePortfolioItems = new();
+    decimal totalValue, profit, totalCosts, percentage;
 
 
     protected override async Task OnInitializedAsync()
@@ -115,6 +159,22 @@
 
             }).ToList();
 
+        totalValue = portfolios.Sum(x => x.TotalValue);
+        totalCosts = 10;
+
+        piePortfolioItems = portfolios.Select(x => new PiePortfolioItem
+            {
+                Name = x.Asset.Name,
+                SymbolName = x.Asset.SymbolForApi,
+                Percentage = x.TotalValue / totalValue * 100
+            }).ToList();
+
+        assetTypePortfolioItems.Add(new PiePortfolioItem
+            {
+                Name = "ETF",
+                SymbolName = "ETF",
+                Percentage = 100
+            });
     }
 
     bool smooth = true;
@@ -123,6 +183,13 @@
         public DateTime Date { get; set; }
         public double Revenue { get; set; }
         public double Profit { get; set; }
+    }
+
+    class PiePortfolioItem
+    {
+        public string SymbolName { get; set; }
+        public string Name { get; set; }
+        public decimal Percentage { get; set; }
     }
 
     string FormatAsEuro(object value)
