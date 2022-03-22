@@ -136,3 +136,15 @@ h3 {
     top: 45%;
     left: 45%;
 }
+
+.flex-align-right {
+    justify-content: flex-end;
+    display: flex;
+}
+
+.margin-right-large{
+    margin-right:150px;
+}
+.margin-right-small {
+    margin-right: 10px;
+}

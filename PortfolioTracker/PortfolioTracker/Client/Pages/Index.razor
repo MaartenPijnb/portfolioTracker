@@ -13,7 +13,7 @@
 
  <div class="container">
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <RadzenChart>
                     <RadzenDonutSeries Data="@piePortfolioItems" CategoryProperty="SymbolName" ValueProperty="Percentage">
                         <TitleTemplate>
@@ -31,12 +31,30 @@
                     </RadzenDonutSeries>
                 </RadzenChart>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <RadzenChart>
                     <RadzenDonutSeries Data="@assetTypePortfolioItems" CategoryProperty="SymbolName" ValueProperty="Percentage">
                         <TitleTemplate>
                             <div class="rz-donut-content">
                                 <div>Asset</div> 
+                                <div>distribution</div>
+                            </div>
+                        </TitleTemplate>
+                              <TooltipTemplate Context="data">
+                        <p>
+                         @data.Name <br />
+                         @decimal.Round(data.Percentage,2) %
+                        </p>
+                    </TooltipTemplate>
+                    </RadzenDonutSeries>
+                </RadzenChart>
+            </div>
+            <div class="col-sm-4">
+                <RadzenChart>
+                    <RadzenDonutSeries Data="@profitsPortfolioItems" CategoryProperty="Name" ValueProperty="Percentage">
+                        <TitleTemplate>
+                            <div class="rz-donut-content">
+                                <div>Profit</div> 
                                 <div>distribution</div>
                             </div>
                         </TitleTemplate>
@@ -99,7 +117,18 @@
 
 <div class="container my-5">
     <div class="row">
+        <div class="col-md-11 flex-align-right">
+             <RadzenButton class="margin-right-small" Click="() =>FilterPortfolioHistory( DateTime.Now.AddYears(-20))" Text="Max" ButtonStyle="ButtonStyle.Info" />
+             <RadzenButton class="margin-right-small" Click="() =>FilterPortfolioHistory( DateTime.Now.AddYears(-1))" Text="Year" ButtonStyle="ButtonStyle.Info" />
+             <RadzenButton class="margin-right-small" Click="() =>FilterPortfolioHistory( new DateTime(DateTime.Now.Year, 1,1))" Text="YTD" ButtonStyle="ButtonStyle.Info" />
+             <RadzenButton class="margin-right-small" Click="() =>FilterPortfolioHistory(DateTime.Now.AddMonths(-1))" Text="Month" ButtonStyle="ButtonStyle.Info" />
+
+            </div>
+            </div>
+    <div class="row">
         <div class="col">
+            
+            
             <RadzenChart>
                 <RadzenAreaSeries Smooth="true" Data="@totalInvestedValue" CategoryProperty="Date" Title="Total Invested" ValueProperty="Revenue" RenderingOrder="1">
                     <TooltipTemplate Context="data">
@@ -128,6 +157,7 @@
                     <RadzenAxisTitle Text="Revenue in Euro" />
                 </RadzenValueAxis>
             </RadzenChart>
+
         </div>
     </div>
 </div>
@@ -135,32 +165,37 @@
     IEnumerable<Portfolio> portfolios;
     IEnumerable<PortfolioHistory> portfoliohistories;
     List<DataItem> totalInvestedValue, totalPortfolioValue;
-    List<PiePortfolioItem> piePortfolioItems, assetTypePortfolioItems = new();
+    List<PiePortfolioItem> piePortfolioItems, assetTypePortfolioItems = new(), profitsPortfolioItems = new();
     decimal totalValue, profit, totalCosts, percentage;
 
 
     protected override async Task OnInitializedAsync()
     {
+        
+        profitsPortfolioItems.Add(new PiePortfolioItem
+            {
+                Name = "Total Invested",                
+                Percentage = 95
+            });
+
+        profitsPortfolioItems.Add(new PiePortfolioItem
+            {
+                Name = "Total Profit",                
+                Percentage = 5
+            });
+            
+        assetTypePortfolioItems.Add(new PiePortfolioItem
+            {
+                Name = "ETF",
+                SymbolName = "ETF",
+                Percentage = 100
+            });
+
         portfolios = await Http.GetFromJsonAsync<IEnumerable<Portfolio>>("Portfolio");
         portfoliohistories = await Http.GetFromJsonAsync<IEnumerable<PortfolioHistory>>("Portfolio/PortfolioHistory");
-
-        totalInvestedValue = portfoliohistories.Select(x => new DataItem
-            {
-                Date = x.Date,
-                Revenue = Convert.ToDouble(x.TotalInvestedPortfolioValue),
-                Profit = Convert.ToDouble(x.Profit)
-            }).ToList();
-
-        totalPortfolioValue = portfoliohistories.Select(x => new DataItem
-            {
-                Date = x.Date,
-                Revenue = Convert.ToDouble(x.TotalPortfolioValue),
-                Profit = Convert.ToDouble(x.Profit)
-
-            }).ToList();
-
         totalValue = portfolios.Sum(x => x.TotalValue);
         totalCosts = 10;
+
 
         piePortfolioItems = portfolios.Select(x => new PiePortfolioItem
             {
@@ -169,12 +204,9 @@
                 Percentage = x.TotalValue / totalValue * 100
             }).ToList();
 
-        assetTypePortfolioItems.Add(new PiePortfolioItem
-            {
-                Name = "ETF",
-                SymbolName = "ETF",
-                Percentage = 100
-            });
+
+
+            FilterPortfolioHistory(DateTime.Now.AddYears(-20));
     }
 
     bool smooth = true;
@@ -195,6 +227,30 @@
     string FormatAsEuro(object value)
     {
         return ((double)value).ToString("C0", CultureInfo.CreateSpecificCulture("nl-NL"));
+    }
+    void btnTest() { }
+
+    void FilterPortfolioHistory(DateTime filterDate)
+    {
+        totalInvestedValue = portfoliohistories.Where(x=>x.Date >= filterDate).Select(x => new DataItem
+            {
+                Date = x.Date,
+                Revenue = Convert.ToDouble(x.TotalInvestedPortfolioValue),
+                Profit = Convert.ToDouble(x.Profit)
+            }).ToList();
+
+        totalPortfolioValue = portfoliohistories.Where(x=>x.Date >= filterDate).Select(x => new DataItem
+            {
+                Date = x.Date,
+                Revenue = Convert.ToDouble(x.TotalPortfolioValue),
+                Profit = Convert.ToDouble(x.Profit)
+
+            }).ToList();  
+    }
+
+      void OnClick(string buttonName)
+    {
+        // do nothing
     }
 
 }
