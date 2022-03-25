@@ -28,7 +28,20 @@ namespace PortfolioTracker.Server.Controllers
         [HttpGet]
         public async Task<IEnumerable<Portfolio>> Get()
         {
-            return await _dbContext.Portfolio.Include(x=>x.Asset).ToListAsync();
+            var portfolios = await _dbContext.Portfolio.Include(x=>x.Asset).ToListAsync();
+
+            var portfoliosGroupedByType = portfolios.ToList().GroupBy(x => x.Asset.AssetType).ToList();
+
+            foreach (var portfolioGroupedByType in portfoliosGroupedByType)
+            {
+                //assetTypePortfolioItems.AddRange(portfolioGroupedByType.Select(x => new PiePortfolioItem
+                //{
+                //    Name = x.Asset.AssetType.ToString(),
+                //    Percentage = x.TotalValue / totalValue * 100
+                //}).ToList());
+            }
+
+            return portfolios; 
         }
 
         [HttpGet]

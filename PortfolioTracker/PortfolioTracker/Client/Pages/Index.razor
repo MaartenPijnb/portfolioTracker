@@ -10,8 +10,10 @@
 <h1>Portfolio Tracker - Beta 0.1</h1>
 
 <h3>Huidig portfolio:</h3>
-
- <div class="container">
+@if (isLoadedComplete)
+{
+    
+<div class="container">
         <div class="row">
             <div class="col-sm-4">
                 <RadzenChart>
@@ -33,7 +35,7 @@
             </div>
             <div class="col-sm-4">
                 <RadzenChart>
-                    <RadzenDonutSeries Data="@assetTypePortfolioItems" CategoryProperty="SymbolName" ValueProperty="Percentage">
+                    <RadzenDonutSeries Data="@assetTypePortfolioItems" CategoryProperty="Name" ValueProperty="Percentage">
                         <TitleTemplate>
                             <div class="rz-donut-content">
                                 <div>Asset</div> 
@@ -69,6 +71,10 @@
             </div>
         </div>
     </div>
+}
+else{
+    <p>Loading...</p>
+}
 
 <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                 Data="@portfolios" TItem="Portfolio" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" >
@@ -167,11 +173,11 @@
     List<DataItem> totalInvestedValue, totalPortfolioValue;
     List<PiePortfolioItem> piePortfolioItems, assetTypePortfolioItems = new(), profitsPortfolioItems = new();
     decimal totalValue, profit, totalCosts, percentage;
-
+    bool isLoadedComplete = false;
 
     protected override async Task OnInitializedAsync()
     {
-        
+
         profitsPortfolioItems.Add(new PiePortfolioItem
             {
                 Name = "Total Invested",                
@@ -183,13 +189,7 @@
                 Name = "Total Profit",                
                 Percentage = 5
             });
-            
-        assetTypePortfolioItems.Add(new PiePortfolioItem
-            {
-                Name = "ETF",
-                SymbolName = "ETF",
-                Percentage = 100
-            });
+
 
         portfolios = await Http.GetFromJsonAsync<IEnumerable<Portfolio>>("Portfolio");
         portfoliohistories = await Http.GetFromJsonAsync<IEnumerable<PortfolioHistory>>("Portfolio/PortfolioHistory");
@@ -204,9 +204,20 @@
                 Percentage = x.TotalValue / totalValue * 100
             }).ToList();
 
+        var portfoliosGroupedByType = portfolios.ToList().GroupBy(x => x.Asset.AssetType).ToList();
 
+        foreach (var portfolioGroupedByType in portfoliosGroupedByType)
+        {
+            assetTypePortfolioItems.Add(
+                new PiePortfolioItem
+                    {
+                        Name = portfolioGroupedByType.First().Asset.AssetType.ToString(),
+                        Percentage = portfolioGroupedByType.Sum(x => x.TotalValue) / totalValue * 100
+                    });
+        }      
 
-            FilterPortfolioHistory(DateTime.Now.AddYears(-20));
+        FilterPortfolioHistory(DateTime.Now.AddYears(-20));
+        isLoadedComplete = true;
     }
 
     bool smooth = true;

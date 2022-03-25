@@ -16,5 +16,6 @@ namespace PortfolioTracker.Model
         public DateTime UpdatedOn { get; set; }
         public int APIId { get; set; }
         public API API{ get; set; }
+        public AssetType AssetType{ get; set; }
     }
 }

@@ -31,13 +31,15 @@ namespace PortfolioTracker.Model
             //Degiro import makes it impossible to create assets dynamically with yahoo finance api :(
 
             modelBuilder.Entity<Asset>().ToTable("Assets").HasData(
-                new Asset { 
-                     ISN = "IE00B4L5Y983",
-                     SymbolForApi= "IWDA.AS",
-                     Name = "iShares Core MSCI World UCITS ETF USD (Acc)",
-                     UpdatedOn = DateTime.Now,
-                     AssetId = 1,
-                     APIId = 1
+                new Asset
+                {
+                    ISN = "IE00B4L5Y983",
+                    SymbolForApi = "IWDA.AS",
+                    Name = "iShares Core MSCI World UCITS ETF USD (Acc)",
+                    UpdatedOn = DateTime.Now,
+                    AssetId = 1,
+                    APIId = 1,
+                    AssetType = AssetType.Etf
                 },
                 new Asset
                 {
@@ -46,11 +48,21 @@ namespace PortfolioTracker.Model
                     Name = "iShares MSCI EM UCITS ETF USD (Acc)",
                     UpdatedOn = DateTime.Now,
                     AssetId = 2,
-                    APIId = 1
+                    APIId = 1,
+                    AssetType = AssetType.Etf
                 }
-                );
-
-          
+                ,
+                new Asset
+                {
+                    ISN = "BE0172903495",
+                    SymbolForApi = "0P00000NFB.F",
+                    Name = "Argenta Pensioenspaarfonds",
+                    UpdatedOn = DateTime.Now,
+                    AssetId = 3,
+                    APIId = 1,
+                    AssetType = AssetType.Pensioen
+                }
+                );           
         }
     }
 }

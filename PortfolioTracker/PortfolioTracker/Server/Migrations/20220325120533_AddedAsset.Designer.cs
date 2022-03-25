@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PortfolioTracker.Model;
 
@@ -11,9 +12,10 @@ using PortfolioTracker.Model;
 namespace PortfolioTracker.Server.Migrations
 {
     [DbContext(typeof(MPortfolioDBContext))]
-    partial class MPortfolioDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220325120533_AddedAsset")]
+    partial class AddedAsset
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,9 +68,6 @@ namespace PortfolioTracker.Server.Migrations
                     b.Property<int>("APIId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AssetType")
-                        .HasColumnType("int");
-
                     b.Property<string>("ISN")
                         .HasColumnType("nvarchar(max)");
 
@@ -97,33 +96,30 @@ namespace PortfolioTracker.Server.Migrations
                         {
                             AssetId = 1,
                             APIId = 1,
-                            AssetType = 1,
                             ISN = "IE00B4L5Y983",
                             Name = "iShares Core MSCI World UCITS ETF USD (Acc)",
                             SymbolForApi = "IWDA.AS",
-                            UpdatedOn = new DateTime(2022, 3, 25, 13, 12, 0, 813, DateTimeKind.Local).AddTicks(8203),
+                            UpdatedOn = new DateTime(2022, 3, 25, 13, 5, 32, 274, DateTimeKind.Local).AddTicks(1009),
                             Value = 0m
                         },
                         new
                         {
                             AssetId = 2,
                             APIId = 1,
-                            AssetType = 1,
                             ISN = "IE00B4L5YC18",
                             Name = "iShares MSCI EM UCITS ETF USD (Acc)",
                             SymbolForApi = "IEMA.AS",
-                            UpdatedOn = new DateTime(2022, 3, 25, 13, 12, 0, 813, DateTimeKind.Local).AddTicks(8252),
+                            UpdatedOn = new DateTime(2022, 3, 25, 13, 5, 32, 274, DateTimeKind.Local).AddTicks(1047),
                             Value = 0m
                         },
                         new
                         {
                             AssetId = 3,
                             APIId = 1,
-                            AssetType = 4,
                             ISN = "BE0172903495",
                             Name = "Argenta Pensioenspaarfonds",
                             SymbolForApi = "0P00000NFB.F",
-                            UpdatedOn = new DateTime(2022, 3, 25, 13, 12, 0, 813, DateTimeKind.Local).AddTicks(8255),
+                            UpdatedOn = new DateTime(2022, 3, 25, 13, 5, 32, 274, DateTimeKind.Local).AddTicks(1050),
                             Value = 0m
                         });
                 });
