@@ -30,17 +30,6 @@ namespace PortfolioTracker.Server.Controllers
         {
             var portfolios = await _dbContext.Portfolio.Include(x=>x.Asset).ToListAsync();
 
-            var portfoliosGroupedByType = portfolios.ToList().GroupBy(x => x.Asset.AssetType).ToList();
-
-            foreach (var portfolioGroupedByType in portfoliosGroupedByType)
-            {
-                //assetTypePortfolioItems.AddRange(portfolioGroupedByType.Select(x => new PiePortfolioItem
-                //{
-                //    Name = x.Asset.AssetType.ToString(),
-                //    Percentage = x.TotalValue / totalValue * 100
-                //}).ToList());
-            }
-
             return portfolios; 
         }
 
@@ -51,7 +40,7 @@ namespace PortfolioTracker.Server.Controllers
             return _dbContext.PortfolioHistory;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("UpdateAssets")]
         public async Task<IActionResult> UpdateAssets()
         {
@@ -60,7 +49,7 @@ namespace PortfolioTracker.Server.Controllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("CreatePortfolioHistory")]
 
         public async Task<IActionResult> CreatePortfolioHistory()
@@ -71,7 +60,7 @@ namespace PortfolioTracker.Server.Controllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("CreatePortfolioHistoryOnceWithoutRealCalcluation")]
 
         public async Task<IActionResult> CreatePortfolioHistoryOnceWithoutRealCalcluation()
@@ -97,7 +86,7 @@ namespace PortfolioTracker.Server.Controllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("CreatePortfolioHistoryOnceWithRealCalcluation")]
 
         public async Task<IActionResult> CreatePortfolioHistoryOnceWitRealCalcluation()

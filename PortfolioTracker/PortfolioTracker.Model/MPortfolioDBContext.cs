@@ -5,14 +5,14 @@ namespace PortfolioTracker.Model
     public class MPortfolioDBContext : DbContext
     {
 
-        public MPortfolioDBContext(DbContextOptions<MPortfolioDBContext> options):base(options)
+        public MPortfolioDBContext(DbContextOptions<MPortfolioDBContext> options) : base(options)
         {
 
         }
         public DbSet<PortfolioTransaction> Transactions { get; set; }
         public DbSet<Asset> Assets { get; set; }
         public DbSet<API> APIs { get; set; }
-        public DbSet<PortfolioHistory> PortfolioHistory{ get; set; }
+        public DbSet<PortfolioHistory> PortfolioHistory { get; set; }
         public DbSet<Portfolio> Portfolio { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -21,11 +21,18 @@ namespace PortfolioTracker.Model
             modelBuilder.Entity<API>().ToTable("APIs").HasData(
               new API
               {
-                  APIKey = "6PoQCJV9O17jeUPS81UDN1sHJ86gKB4RahYraKSS",
-                  APIName = APIType.YAHOOFINANCE,
-                  BaseUrl = "https://yfapi.net",
-                  APIId = 1
-              }
+                  APIKey = "not applicable",
+                  APIName = APIType.NOTAPPLICABLE,
+                  BaseUrl = "not applicable",
+                  APIId = 2
+              },
+               new API
+               {
+                   APIKey = "6PoQCJV9O17jeUPS81UDN1sHJ86gKB4RahYraKSS",
+                   APIName = APIType.YAHOOFINANCE,
+                   BaseUrl = "https://yfapi.net",
+                   APIId = 1
+               }
               );
 
             //Degiro import makes it impossible to create assets dynamically with yahoo finance api :(
@@ -61,8 +68,18 @@ namespace PortfolioTracker.Model
                     AssetId = 3,
                     APIId = 1,
                     AssetType = AssetType.Pensioen
+                },
+                new Asset
+                {
+                    ISN = "not applicable",
+                    SymbolForApi = "not applicable",
+                    Name = "Groepsverzekering IS",
+                    AssetId = 4,
+                    APIId = 2,
+                    UpdatedOn = DateTime.Now,
+                    AssetType = AssetType.Groepsverzekering
                 }
-                );           
+                );
         }
     }
 }

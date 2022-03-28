@@ -36,7 +36,14 @@ namespace PortfolioTracker.Implementation.Services
                 portfolio.TotalShares = item.Sum(x => x.AmountOfShares);
                 portfolio.TotalInvestedValue = item.Sum(x => x.TotalCosts);
                 portfolio.AveragePricePerShare = item.Average(x => x.PricePerShare);
-                portfolio.TotalValue = _dbContext.Assets.Single(x => x.AssetId == item.Key).Value * portfolio.TotalShares;
+                if(_dbContext.Assets.Single(x => x.AssetId == item.Key).AssetType  != AssetType.Groepsverzekering)
+                {
+                    portfolio.TotalValue = _dbContext.Assets.Single(x => x.AssetId == item.Key).Value * portfolio.TotalShares;
+                }
+                else
+                {
+                    portfolio.TotalValue = portfolio.TotalInvestedValue;
+                }
                 portfolio.AssetID = item.Key;
                 portfolio.ProfitPercentage = (portfolio.TotalValue - portfolio.TotalInvestedValue) / portfolio.TotalInvestedValue * 100;
                 portfolio.Profit = portfolio.TotalValue - portfolio.TotalInvestedValue;

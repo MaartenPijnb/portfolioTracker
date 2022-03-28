@@ -32,5 +32,23 @@ namespace PortfolioTracker.Server.Controllers
 
             return Ok();
         }
+
+
+        [Route("CreateGroepsverzekeringTransaction")]
+        [HttpPost]
+        public async Task<IActionResult> CreateGroepsverzekeringTransaction(int assetId)
+        {
+            var transaction = new PortfolioTransaction();
+            transaction.AssetId = assetId;
+            transaction.AmountOfShares = 1;
+            transaction.TotalCosts =8022.33M;
+            transaction.PricePerShare = 8022.33M;
+            transaction.TransactionType = TransactionType.BUY;
+
+            await _dbContext.Transactions.AddAsync(transaction);
+            await _dbContext.SaveChangesAsync();
+
+            return Ok();
+        }
     }
 }

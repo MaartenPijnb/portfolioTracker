@@ -1,4 +1,5 @@
-﻿using PortfolioTracker.Implementation.APIs;
+﻿using Microsoft.EntityFrameworkCore;
+using PortfolioTracker.Implementation.APIs;
 using PortfolioTracker.Implementation.Resolvers;
 using PortfolioTracker.Model;
 using System;
@@ -21,7 +22,7 @@ namespace PortfolioTracker.Implementation.Services
         }
         public async Task UpdateAssets()
         {
-            var allAssets = _dbcontext.Assets.ToList();
+            var allAssets = _dbcontext.Assets.Include(x => x.API).ToList();
 
             foreach (var assetsPerApi in allAssets.GroupBy(x=>x.API.APIName))
             {

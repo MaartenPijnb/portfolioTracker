@@ -16,7 +16,8 @@ namespace PortfolioTracker.Model
 
     public enum APIType
     {
-        YAHOOFINANCE,
-        BINANCE
+        YAHOOFINANCE = 0,
+        BINANCE =1,
+        NOTAPPLICABLE = 3,
     }
 }

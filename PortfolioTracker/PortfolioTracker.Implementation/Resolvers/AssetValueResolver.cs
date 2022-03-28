@@ -28,6 +28,8 @@ namespace PortfolioTracker.Implementation.Resolvers
                 case APIType.BINANCE:
                     throw new NotImplementedException($"{apiType.ToString()} is not supported");
                 default:
+                case APIType.NOTAPPLICABLE:
+                    return new List<double>{0 };
                     throw new NotSupportedException();
             }
         }
