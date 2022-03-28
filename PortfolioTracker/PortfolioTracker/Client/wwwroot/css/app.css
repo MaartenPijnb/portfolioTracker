@@ -1,7 +1,7 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+l, body {
+    font-family: 'Inter', Helvetica, Arial, sans-serif;
 }
 
 h1:focus {
@@ -147,4 +147,21 @@ h3 {
 }
 .margin-right-small {
     margin-right: 10px;
+}
+
+.format-currency{
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.rz-datatable-data td .rz-cell-data, .rz-grid-table td .rz-cell-data {
+    color: #48606c;
+    font-family: 'Inter';
+    font-weight: 400;
+    font-size: 15px !important;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

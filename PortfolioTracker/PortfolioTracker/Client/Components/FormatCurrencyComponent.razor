@@ -1,0 +1,14 @@
+﻿@using System.Globalization
+<div class="format-currency">
+    <div class="format-currency-sign">
+        €
+    </div>
+    <div class="format-currency-value">
+        @CurrencyToDisplay.ToString("N2", CultureInfo.CreateSpecificCulture("fr-FR"))
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public decimal CurrencyToDisplay { get; set; }
+}

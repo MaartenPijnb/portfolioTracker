@@ -2,6 +2,7 @@
 
 @using Microsoft.EntityFrameworkCore
 @using System.Globalization
+@using PortfolioTracker.Client.Components
 
 @inject HttpClient Http
 
@@ -12,24 +13,24 @@
 <h3>Huidig portfolio:</h3>
 @if (isLoadedComplete)
 {
-    
-<div class="container">
+
+    <div class="container">
         <div class="row">
             <div class="col-sm-4">
                 <RadzenChart>
                     <RadzenDonutSeries Data="@piePortfolioItems" CategoryProperty="SymbolName" ValueProperty="Percentage">
                         <TitleTemplate>
                             <div class="rz-donut-content">
-                                <div>Portfolio</div> 
+                                <div>Portfolio</div>
                                 <div>distribution</div>
                             </div>
                         </TitleTemplate>
-                              <TooltipTemplate Context="data">
-                        <p>
-                         @data.Name <br />
-                         @decimal.Round(data.Percentage,2) %
-                        </p>
-                    </TooltipTemplate>
+                        <TooltipTemplate Context="data">
+                            <p>
+                                @data.Name <br />
+                                @decimal.Round(data.Percentage,2) %
+                            </p>
+                        </TooltipTemplate>
                     </RadzenDonutSeries>
                 </RadzenChart>
             </div>
@@ -38,16 +39,16 @@
                     <RadzenDonutSeries Data="@assetTypePortfolioItems" CategoryProperty="Name" ValueProperty="Percentage">
                         <TitleTemplate>
                             <div class="rz-donut-content">
-                                <div>Asset</div> 
+                                <div>Asset</div>
                                 <div>distribution</div>
                             </div>
                         </TitleTemplate>
-                              <TooltipTemplate Context="data">
-                        <p>
-                         @data.Name <br />
-                         @decimal.Round(data.Percentage,2) %
-                        </p>
-                    </TooltipTemplate>
+                        <TooltipTemplate Context="data">
+                            <p>
+                                @data.Name <br />
+                                @decimal.Round(data.Percentage,2) %
+                            </p>
+                        </TooltipTemplate>
                     </RadzenDonutSeries>
                 </RadzenChart>
             </div>
@@ -56,93 +57,100 @@
                     <RadzenDonutSeries Data="@profitsPortfolioItems" CategoryProperty="Name" ValueProperty="Percentage">
                         <TitleTemplate>
                             <div class="rz-donut-content">
-                                <div>Profit</div> 
+                                <div>Profit</div>
                                 <div>distribution</div>
                             </div>
                         </TitleTemplate>
-                              <TooltipTemplate Context="data">
-                        <p>
-                         @data.Name <br />
-                         @decimal.Round(data.Percentage,2) %
-                        </p>
-                    </TooltipTemplate>
+                        <TooltipTemplate Context="data">
+                            <p>
+                                @data.Name <br />
+                                @decimal.Round(data.Percentage,2) %
+                            </p>
+                        </TooltipTemplate>
                     </RadzenDonutSeries>
                 </RadzenChart>
             </div>
         </div>
     </div>
 }
-else{
+else
+{
     <p>Loading...</p>
 }
 
-<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                Data="@portfolios" TItem="Portfolio" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" >
+<RadzenDataGrid AllowColumnResize="true" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                Data="@portfolios" TItem="Portfolio"  >
     <Columns>
 
-        @*<RadzenDataGridColumn TItem="Employee" Title="Photo" Frozen="true" Sortable="false" Filterable="false" Width="60px" >
+        <RadzenDataGridColumn MinWidth="300px" Width="50%" TItem="Portfolio" Property="Asset.Name" Title="Asset"  />
+        <RadzenDataGridColumn MinWidth="150px" Width="12%" TItem="Portfolio" Title="Huidige waarde">
             <Template Context="data">
-            <RadzenImage Path="@data.Photo" style="width: 40px; height: 40px; border-radius: 8px;" />
+                <FormatCurrencyComponent CurrencyToDisplay=@data.TotalInvestedValue />
             </Template>
-            </RadzenDataGridColumn>*@
-        <RadzenDataGridColumn TItem="Portfolio" Property="Asset.Name" Title="Asset" Width="400px" />
-        <RadzenDataGridColumn TItem="Portfolio" Property="TotalValue" Title="Huidige waarde" />
-        <RadzenDataGridColumn TItem="Portfolio" Property="Profit" Title="Winst / Verlies" />
-        <RadzenDataGridColumn TItem="Portfolio" Property="ProfitPercentage" Title="%" />
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn  MinWidth="150px" Width="12%" TItem="Portfolio"  Title="Winst / Verlies" >
+            <Template Context="data">
+                <FormatCurrencyComponent CurrencyToDisplay=@data.Profit />
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn  MinWidth="100px" Width="10%" TItem="Portfolio" Property="ProfitPercentage" Title="%" />
+        <RadzenDataGridColumn  MinWidth="100px" Width="16%" TItem="Portfolio" Property="ProfitPercentage" Title="Portfolio weight" />
     </Columns>
 </RadzenDataGrid>
 
 <h3>Portfolio history:</h3>
 
-    <div class="row">
-        <div class="col-md-3 p-3">
-            <RadzenCard class="rz-card-portfoliohistory"> 
-                <h4 class="mb-3">Total value</h4>
-               <p>€ @totalValue</p>
-            </RadzenCard>
-        </div>
-        <div class="col-md-3 p-3">
-            <RadzenCard class="rz-card-portfoliohistory"> 
-                <h4 class="mb-3">Profit</h4>
-                <p>€ @totalCosts </p>
-            </RadzenCard>
-        </div>
-        <div class="col-md-3 p-3">
-            <RadzenCard class="rz-card-portfoliohistory"> 
-                <h4 class="mb-3">Total transaction costs</h4>
-              <p>€ 10</p>
-            </RadzenCard>
-        </div>
-             <div class="col-md-3 p-3">
-            <RadzenCard class="rz-card-portfoliohistory"> 
-                <h4 class="mb-3">Total percentage</h4>
-              <p>100%</p>
-            </RadzenCard>
-        </div>
+<div class="row">
+    <div class="col-md-3 p-3">
+        <RadzenCard class="rz-card-portfoliohistory">
+            <h4 class="mb-3">Total value</h4>
+            <p>€ @totalValue.ToString("N2", CultureInfo.CreateSpecificCulture("fr-FR"))</p>
+        </RadzenCard>
     </div>
+    <div class="col-md-3 p-3">
+        <RadzenCard class="rz-card-portfoliohistory">
+            <h4 class="mb-3">Profit</h4>
+            <p>€ @totalCosts.ToString("N2", CultureInfo.CreateSpecificCulture("fr-FR"))  </p>
+        </RadzenCard>
+    </div>
+    <div class="col-md-3 p-3">
+        <RadzenCard class="rz-card-portfoliohistory">
+            <h4 class="mb-3">Total transaction costs</h4>
+            <p>€ 10</p>
+        </RadzenCard>
+    </div>
+    <div class="col-md-3 p-3">
+        <RadzenCard class="rz-card-portfoliohistory">
+            <h4 class="mb-3">Total percentage</h4>
+            <p>100%</p>
+        </RadzenCard>
+    </div>
+</div>
 
 <div class="container my-5">
     <div class="row">
         <div class="col-md-11 flex-align-right">
-             <RadzenButton class="margin-right-small" Click="() =>FilterPortfolioHistory( DateTime.Now.AddYears(-20))" Text="Max" ButtonStyle="ButtonStyle.Info" />
-             <RadzenButton class="margin-right-small" Click="() =>FilterPortfolioHistory( DateTime.Now.AddYears(-1))" Text="Year" ButtonStyle="ButtonStyle.Info" />
-             <RadzenButton class="margin-right-small" Click="() =>FilterPortfolioHistory( new DateTime(DateTime.Now.Year, 1,1))" Text="YTD" ButtonStyle="ButtonStyle.Info" />
-             <RadzenButton class="margin-right-small" Click="() =>FilterPortfolioHistory(DateTime.Now.AddMonths(-1))" Text="Month" ButtonStyle="ButtonStyle.Info" />
+            <RadzenButton class="margin-right-small" Click="() =>FilterPortfolioHistory( DateTime.Now.AddYears(-20))" Text="Max" ButtonStyle="ButtonStyle.Info" />
+            <RadzenButton class="margin-right-small" Click="() =>FilterPortfolioHistory( DateTime.Now.AddYears(-1))" Text="Year" ButtonStyle="ButtonStyle.Info" />
+            <RadzenButton class="margin-right-small" Click="() =>FilterPortfolioHistory( new DateTime(DateTime.Now.Year, 1,1))" Text="YTD" ButtonStyle="ButtonStyle.Info" />
+            <RadzenButton class="margin-right-small" Click="() =>FilterPortfolioHistory(DateTime.Now.AddMonths(-1))" Text="Month" ButtonStyle="ButtonStyle.Info" />
 
-            </div>
-            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col">
-            
-            
+
+
             <RadzenChart>
                 <RadzenAreaSeries Smooth="true" Data="@totalInvestedValue" CategoryProperty="Date" Title="Total Invested" ValueProperty="Revenue" RenderingOrder="1">
                     <TooltipTemplate Context="data">
                         <p>
                             <h6>@data.Date.ToString("dd MMM yyyy")</h6>
-                            Total invested: @data.Revenue € 
+                            Total invested: € @data.Revenue.ToString("N2", CultureInfo.CreateSpecificCulture("fr-FR")) 
                             <br>
-                            Total profit: @data.Profit €
+                            Total profit: € @data.Profit.ToString("N2", CultureInfo.CreateSpecificCulture("fr-FR")) 
                         </p>
                     </TooltipTemplate>
                 </RadzenAreaSeries>
@@ -150,9 +158,9 @@ else{
                     <TooltipTemplate Context="data">
                         <p>
                             <h6>@data.Date.ToString("dd MMM yyyy")</h6>
-                            Total portfolio value: @data.Revenue €
-                             <br>   
-                            Total Profit: @data.Profit €
+                            Total portfolio value: € @data.Revenue.ToString("N2", CultureInfo.CreateSpecificCulture("fr-FR"))
+                            <br>
+                            Total Profit: € @data.Profit.ToString("N2", CultureInfo.CreateSpecificCulture("fr-FR"))   
                         </p>
                     </TooltipTemplate>
                 </RadzenAreaSeries>
@@ -180,13 +188,13 @@ else{
 
         profitsPortfolioItems.Add(new PiePortfolioItem
             {
-                Name = "Total Invested",                
+                Name = "Total Invested",
                 Percentage = 95
             });
 
         profitsPortfolioItems.Add(new PiePortfolioItem
             {
-                Name = "Total Profit",                
+                Name = "Total Profit",
                 Percentage = 5
             });
 
@@ -214,7 +222,7 @@ else{
                         Name = portfolioGroupedByType.First().Asset.AssetType.ToString(),
                         Percentage = portfolioGroupedByType.Sum(x => x.TotalValue) / totalValue * 100
                     });
-        }      
+        }
 
         FilterPortfolioHistory(DateTime.Now.AddYears(-20));
         isLoadedComplete = true;
@@ -243,23 +251,23 @@ else{
 
     void FilterPortfolioHistory(DateTime filterDate)
     {
-        totalInvestedValue = portfoliohistories.Where(x=>x.Date >= filterDate).Select(x => new DataItem
+        totalInvestedValue = portfoliohistories.Where(x => x.Date >= filterDate).Select(x => new DataItem
             {
                 Date = x.Date,
                 Revenue = Convert.ToDouble(x.TotalInvestedPortfolioValue),
                 Profit = Convert.ToDouble(x.Profit)
             }).ToList();
 
-        totalPortfolioValue = portfoliohistories.Where(x=>x.Date >= filterDate).Select(x => new DataItem
+        totalPortfolioValue = portfoliohistories.Where(x => x.Date >= filterDate).Select(x => new DataItem
             {
                 Date = x.Date,
                 Revenue = Convert.ToDouble(x.TotalPortfolioValue),
                 Profit = Convert.ToDouble(x.Profit)
 
-            }).ToList();  
+            }).ToList();
     }
 
-      void OnClick(string buttonName)
+    void OnClick(string buttonName)
     {
         // do nothing
     }
