@@ -48,7 +48,7 @@ namespace PortfolioTracker.Implementation.Resolvers
                     for (int i = 0; i < assetHistoryResponse.AssetHistoriesIWDA.Timestamp.Count; i++)
                     {
                         var datetimeoffset = DateTimeOffset.FromUnixTimeSeconds(assetHistoryResponse.AssetHistoriesIWDA.Timestamp[i]);
-                        assetHistoryIWDA.AssetHistoryValues.Add(datetimeoffset.Date, assetHistoryResponse.AssetHistoriesIWDA.Close[i]);
+                        assetHistoryIWDA.AssetHistoryValues.Add(datetimeoffset.Date, assetHistoryResponse.AssetHistoriesIWDA.Close[i].Value);
                     }
 
                     var assetHistoryIEMA = new AssetHistory();
@@ -56,10 +56,24 @@ namespace PortfolioTracker.Implementation.Resolvers
                     for (int i = 0; i < assetHistoryResponse.AssetHistoriesIEMA.Timestamp.Count; i++)
                     {
                         var datetimeoffset = DateTimeOffset.FromUnixTimeSeconds(assetHistoryResponse.AssetHistoriesIEMA.Timestamp[i]);
-                        assetHistoryIEMA.AssetHistoryValues.Add(datetimeoffset.Date, assetHistoryResponse.AssetHistoriesIEMA.Close[i]);
+                        assetHistoryIEMA.AssetHistoryValues.Add(datetimeoffset.Date, assetHistoryResponse.AssetHistoriesIEMA.Close[i].Value);
                     }
+
+                    var assetHistoryArgenta = new AssetHistory();
+                    assetHistoryArgenta.SymbolName = "0P00000NFB.F";
+                    for (int i = 0; i < assetHistoryResponse.AssetHistoriesArgenta.Timestamp.Count; i++)
+                    {
+                        var datetimeoffset = DateTimeOffset.FromUnixTimeSeconds(assetHistoryResponse.AssetHistoriesArgenta.Timestamp[i]);
+                        if (assetHistoryResponse.AssetHistoriesArgenta.Close[i].HasValue)
+                        {
+                            assetHistoryArgenta.AssetHistoryValues.Add(datetimeoffset.Date, assetHistoryResponse.AssetHistoriesArgenta.Close[i].Value);
+                        }
+                    }
+
                     response.Add(assetHistoryIWDA);
                     response.Add(assetHistoryIEMA);
+                    response.Add(assetHistoryArgenta);
+
                     return response;         
 
                 case APIType.BINANCE:

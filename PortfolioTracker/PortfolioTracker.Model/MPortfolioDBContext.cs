@@ -71,7 +71,7 @@ namespace PortfolioTracker.Model
                 },
                 new Asset
                 {
-                    ISN = "not applicable",
+                    ISN = "Groepsverzekering IS",
                     SymbolForApi = "not applicable",
                     Name = "Groepsverzekering IS",
                     AssetId = 4,

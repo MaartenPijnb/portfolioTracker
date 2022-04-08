@@ -13,6 +13,11 @@ namespace PortfolioTracker.Implementation.Models.Yahoo.V8History
 
         public AssetHistory AssetHistoriesIWDA { get; set; }
 
+        [JsonPropertyName("0P00000NFB.F")]
+
+        public AssetHistory AssetHistoriesArgenta { get; set; }
+
+
         [JsonPropertyName("IEMA.AS")]
         public AssetHistory AssetHistoriesIEMA { get; set; }
     }

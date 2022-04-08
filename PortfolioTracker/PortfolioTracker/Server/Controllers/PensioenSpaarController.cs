@@ -15,19 +15,35 @@ namespace PortfolioTracker.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePensioenSpaarTransaction(int assetId, decimal totalShares, decimal totalValue, decimal percentage)
         {
-            var transaction = new PortfolioTransaction();
-            transaction.AssetId = assetId;
-            transaction.AmountOfShares = totalShares;
+            //46,705
+            var startedOn = new DateTime(2017, 8, 17);
+            var totalMonths = (DateTime.Now.Year - startedOn.Year) * 12 + DateTime.Now.Month - startedOn.Month;
+
 
             //Caculate original price per share 
             var totalPercentage = 100 + percentage;
             var valueForOnePercent = totalValue / totalPercentage;
 
-            transaction.TotalCosts = valueForOnePercent*100;
-            transaction.PricePerShare = transaction.TotalCosts / totalShares;
-            transaction.TransactionType = TransactionType.BUY;
+            var transactionDate = startedOn;
+            var transactionsToAdd = new List<PortfolioTransaction>();
 
-            await _dbContext.Transactions.AddAsync(transaction);
+            while (transactionDate < DateTime.Now)
+            {
+                var transaction = new PortfolioTransaction();
+                transaction.AssetId = assetId;
+                transaction.AmountOfShares = totalShares / totalMonths;
+                transaction.TotalCosts = valueForOnePercent * 100 / totalMonths;
+                transaction.PricePerShare = transaction.TotalCosts / transaction.AmountOfShares;
+                transaction.TransactionType = TransactionType.BUY;
+                transaction.CreatedOn = transactionDate;
+
+                transactionsToAdd.Add(transaction);
+                transactionDate = transactionDate.AddMonths(1);
+            }
+
+
+            await _dbContext.Transactions.AddRangeAsync(transactionsToAdd);
+
             await _dbContext.SaveChangesAsync();
 
             return Ok();
@@ -36,16 +52,28 @@ namespace PortfolioTracker.Server.Controllers
 
         [Route("CreateGroepsverzekeringTransaction")]
         [HttpPost]
-        public async Task<IActionResult> CreateGroepsverzekeringTransaction(int assetId)
+        public async Task<IActionResult> CreateGroepsverzekeringTransaction(int assetId, DateTime startedOn)
         {
-            var transaction = new PortfolioTransaction();
-            transaction.AssetId = assetId;
-            transaction.AmountOfShares = 1;
-            transaction.TotalCosts =8022.33M;
-            transaction.PricePerShare = 8022.33M;
-            transaction.TransactionType = TransactionType.BUY;
+            var totalMonths = (DateTime.Now.Year - startedOn.Year) * 12 + DateTime.Now.Month - startedOn.Month;
+            var transactionDate = startedOn;
+            var transactionsToAdd = new List<PortfolioTransaction>();
 
-            await _dbContext.Transactions.AddAsync(transaction);
+            while(transactionDate < DateTime.Now)
+            {
+                var transaction = new PortfolioTransaction();
+                transaction.AssetId = assetId;
+                transaction.AmountOfShares = 1;
+                transaction.TotalCosts = 8022.33M / totalMonths;
+                transaction.PricePerShare = 8022.33M / totalMonths;
+                transaction.TransactionType = TransactionType.BUY;
+                transaction.CreatedOn = transactionDate;
+
+                transactionsToAdd.Add(transaction);
+                transactionDate = transactionDate.AddMonths(1);
+            }
+
+
+            await _dbContext.Transactions.AddRangeAsync(transactionsToAdd);
             await _dbContext.SaveChangesAsync();
 
             return Ok();

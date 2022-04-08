@@ -12,7 +12,7 @@ namespace PortfolioTracker.Implementation.Models.Yahoo.V8History
 
         public List<int> Timestamp { get; set; }
 
-        public List<double> Close { get; set; }
+        public List<double?> Close { get; set; }
 
         public object PreviousClose { get; set; }
 

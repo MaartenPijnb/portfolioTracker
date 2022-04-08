@@ -8,7 +8,7 @@
 
 <PageTitle>Portfolio Tracker</PageTitle>
 
-<h1>Portfolio Tracker - Beta 0.1</h1>
+<h1>Portfolio Tracker - Beta 0.2</h1>
 
 <h3>Huidig portfolio:</h3>
 @if (isLoadedComplete)
@@ -196,7 +196,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         portfolios = await Http.GetFromJsonAsync<IEnumerable<Portfolio>>("Portfolio");
-        portfoliohistories = await Http.GetFromJsonAsync<IEnumerable<PortfolioHistory>>("Portfolio/PortfolioHistory");
+        
         totalValue = portfolios.Sum(x => x.TotalValue);
         totalTransactionCosts = await Http.GetFromJsonAsync<decimal>("Transaction/TotalTransactionCosts");
         totalTaxesCosts = await Http.GetFromJsonAsync<decimal>("Transaction/TotalTaxes");
@@ -233,7 +233,7 @@ else
                 Percentage = profit / totalValue *100 
             });
 
-        FilterPortfolioHistory(DateTime.Now.AddYears(-20));
+        await FilterPortfolioHistory(new DateTime(DateTime.Now.Year,1,1));
         isLoadedComplete = true;
     }
 
@@ -258,8 +258,9 @@ else
     }
     void btnTest() { }
 
-    void FilterPortfolioHistory(DateTime filterDate)
+    async Task FilterPortfolioHistory(DateTime filterDate)
     {
+        portfoliohistories = await Http.GetFromJsonAsync<IEnumerable<PortfolioHistory>>("Portfolio/PortfolioHistory?filterDate=" + filterDate.ToString("yyyy-MM-dd"));
         totalInvestedValue = portfoliohistories.Where(x => x.Date >= filterDate).Select(x => new DataItem
             {
                 Date = x.Date,
