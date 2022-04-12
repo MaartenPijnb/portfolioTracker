@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioTracker.Server", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioTracker.Client", "PortfolioTracker\Client\PortfolioTracker.Client.csproj", "{B6EA9662-C7C6-41BE-A83B-FB278D6EE3B1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioTracker.Shared", "PortfolioTracker\Shared\PortfolioTracker.Shared.csproj", "{A97307AA-4364-4F02-B8C8-77701803C05B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioTracker.Model", "PortfolioTracker.Model\PortfolioTracker.Model.csproj", "{EA838864-C883-476F-8A51-947780CE9B06}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioTracker.Degiro.Runner", "PortfolioTracker.Degiro.Runner\PortfolioTracker.Degiro.Runner.csproj", "{B8F84426-06C5-41FA-8BA8-08D32444AF57}"
@@ -21,6 +19,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioTracker.Playground", "PortfolioTracker.Playground\PortfolioTracker.Playground.csproj", "{00761E73-251E-4D43-9DA3-5905256C2706}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioTracker.Implementation", "PortfolioTracker.Implementation\PortfolioTracker.Implementation.csproj", "{D7BDAE45-8033-4065-A57B-7A890C32FDAC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortfolioTracker.Scheduler", "Scheduler\PortfolioTracker.Scheduler.csproj", "{5C6FF261-3087-4155-AC0E-68DB5209AE1C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,10 +36,6 @@ Global
 		{B6EA9662-C7C6-41BE-A83B-FB278D6EE3B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6EA9662-C7C6-41BE-A83B-FB278D6EE3B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6EA9662-C7C6-41BE-A83B-FB278D6EE3B1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A97307AA-4364-4F02-B8C8-77701803C05B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A97307AA-4364-4F02-B8C8-77701803C05B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A97307AA-4364-4F02-B8C8-77701803C05B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A97307AA-4364-4F02-B8C8-77701803C05B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EA838864-C883-476F-8A51-947780CE9B06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EA838864-C883-476F-8A51-947780CE9B06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA838864-C883-476F-8A51-947780CE9B06}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -56,6 +52,10 @@ Global
 		{D7BDAE45-8033-4065-A57B-7A890C32FDAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7BDAE45-8033-4065-A57B-7A890C32FDAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7BDAE45-8033-4065-A57B-7A890C32FDAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C6FF261-3087-4155-AC0E-68DB5209AE1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C6FF261-3087-4155-AC0E-68DB5209AE1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C6FF261-3087-4155-AC0E-68DB5209AE1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C6FF261-3087-4155-AC0E-68DB5209AE1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

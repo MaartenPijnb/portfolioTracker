@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\PortfolioTracker.Model\PortfolioTracker.Model.csproj" />
-    <ProjectReference Include="..\Shared\PortfolioTracker.Shared.csproj" />
   </ItemGroup>
 
 </Project>

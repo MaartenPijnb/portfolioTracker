@@ -1,0 +1,486 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "PortfolioTracker.Server",
+    "version": "1.0"
+  },
+  "paths": {
+    "/FileUpload": {
+      "post": {
+        "tags": [
+          "FileUpload"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "FileUpload"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/CreatePensioenSpaarTransaction": {
+      "post": {
+        "tags": [
+          "PensioenSpaar"
+        ],
+        "parameters": [
+          {
+            "name": "assetId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "totalShares",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "totalValue",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "percentage",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/CreateGroepsverzekeringTransaction": {
+      "post": {
+        "tags": [
+          "PensioenSpaar"
+        ],
+        "parameters": [
+          {
+            "name": "assetId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "startedOn",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Portfolio": {
+      "get": {
+        "tags": [
+          "Portfolio"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Portfolio"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Portfolio"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Portfolio"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Portfolio/PortfolioHistory": {
+      "get": {
+        "tags": [
+          "Portfolio"
+        ],
+        "parameters": [
+          {
+            "name": "filterDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PortfolioHistory"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PortfolioHistory"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PortfolioHistory"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Portfolio/UpdateAssets": {
+      "post": {
+        "tags": [
+          "Portfolio"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Portfolio/CreatePortfolioHistory": {
+      "post": {
+        "tags": [
+          "Portfolio"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Portfolio/CreatePortfolioHistoryOnceWithoutRealCalcluation": {
+      "post": {
+        "tags": [
+          "Portfolio"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Portfolio/CreatePortfolioHistoryOnceWithRealCalcluation": {
+      "post": {
+        "tags": [
+          "Portfolio"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/Transaction/TotalTransactionCosts": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "number",
+                  "format": "double"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "number",
+                  "format": "double"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "number",
+                  "format": "double"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Transaction/TotalTaxes": {
+      "get": {
+        "tags": [
+          "Transaction"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "number",
+                  "format": "double"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "number",
+                  "format": "double"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "number",
+                  "format": "double"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "API": {
+        "type": "object",
+        "properties": {
+          "apiId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "apiName": {
+            "$ref": "#/components/schemas/APIType"
+          },
+          "baseUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "apiKey": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "APIType": {
+        "enum": [
+          0,
+          1,
+          3
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "Asset": {
+        "type": "object",
+        "properties": {
+          "assetId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isn": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "symbolForApi": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "number",
+            "format": "double"
+          },
+          "updatedOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "apiId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "api": {
+            "$ref": "#/components/schemas/API"
+          },
+          "assetType": {
+            "$ref": "#/components/schemas/AssetType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AssetType": {
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "Portfolio": {
+        "type": "object",
+        "properties": {
+          "portfolioId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "assetID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/Asset"
+          },
+          "totalShares": {
+            "type": "number",
+            "format": "double"
+          },
+          "averagePricePerShare": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalInvestedValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "profitPercentage": {
+            "type": "number",
+            "format": "double"
+          },
+          "profit": {
+            "type": "number",
+            "format": "double"
+          },
+          "updatedOn": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PortfolioHistory": {
+        "type": "object",
+        "properties": {
+          "portfolioHistoryId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalInvestedPortfolioValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalPortfolioValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "percentage": {
+            "type": "number",
+            "format": "double"
+          },
+          "profit": {
+            "type": "number",
+            "format": "double"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
