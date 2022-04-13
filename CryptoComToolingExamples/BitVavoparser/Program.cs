@@ -18,7 +18,7 @@ Console.WriteLine("Loading CSV....");
 
 
 
-using (var reader = new StreamReader("C:\\Users\\PaijnzzzPC\\source\\repos\\CryptoComTooling\\CryptoComTooling\\transactions_bitvavo.csv"))
+using (var reader = new StreamReader("C:\\Git\\portfolioTracker\\CryptoComToolingExamples\\BitVavoparser\\transactions_bitvavo.csv"))
 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
 {
     int TotalRecords = 0;
@@ -46,16 +46,13 @@ using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
 
     foreach (var tradedDistinctByDateRecord in tradedDistinctByDateRecords)
     {
-        Console.WriteLine("hello" + tradedDistinctByDateRecord.First().TimeStamp + tradedDistinctByDateRecord.First().Currency);
-       
-
         //first record is always in euro and determines if its a buy or sell
         var firstTradedRecord = tradedDistinctByDateRecord.First();
 
-        if(firstTradedRecord.Currency != "EUR")
-        {
-            throw new Exception("Eerste record van de transactie was geen euro, we konden niet berekenen of het over een buy of sell order ging.");
-        }
+        //if(firstTradedRecord.Currency != "EUR")
+        //{
+        //    throw new Exception("Eerste record van de transactie was geen euro, we konden niet berekenen of het over een buy of sell order ging.");
+        //}
 
         BitVavoparser.CSVEntities.Action transactionType;
         if (firstTradedRecord.Amount < 0)
@@ -66,8 +63,6 @@ using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
         {
             transactionType = BitVavoparser.CSVEntities.Action.Sold;
         }
-
-        Console.WriteLine("We hebben een " + transactionType + " aankoop gehad.");
 
         var lastRecord = tradedDistinctByDateRecord.Last();
         if (lastRecord.Currency == "EUR")
@@ -107,12 +102,8 @@ using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             Shares = totalCryptoCurrency,
             Price = (1/ totalCryptoCurrency) * totalEur,   
 
-        });
-        
+        });        
     }
-
-
-
 
     foreach (var tradedRecord in cryptoRecords.Where(x => x.Type == BitvavoType.trade))
     {
@@ -157,11 +148,11 @@ using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
     }
 
 
-    using (var writer = new StreamWriter("C:\\Users\\PaijnzzzPC\\source\\repos\\CryptoComTooling\\CryptoComTooling\\transactions_bitvavo_generated_small_stake.csv"))
-    using (var csvWriter = new CsvWriter(writer, new CsvConfiguration(CultureInfo.CurrentCulture) { Delimiter = ";" }))
-    {
-        csvWriter.WriteRecords(portfolioTransactionRecords);
-    }
+    //using (var writer = new StreamWriter("C:\\Users\\PaijnzzzPC\\source\\repos\\CryptoComTooling\\CryptoComTooling\\transactions_bitvavo_generated_small_stake.csv"))
+    //using (var csvWriter = new CsvWriter(writer, new CsvConfiguration(CultureInfo.CurrentCulture) { Delimiter = ";" }))
+    //{
+    //    csvWriter.WriteRecords(portfolioTransactionRecords);
+    //}
 
 }
 

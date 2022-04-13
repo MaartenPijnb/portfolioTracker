@@ -24,9 +24,8 @@ namespace PortfolioTracker.Server.Controllers
         }
 
         [HttpPost]
-        public IActionResult Upload(IFormFile file)
-        {
-            _logger.LogWarning("Maarten zegt hoi");
+        public IActionResult UploadDegiro(IFormFile file)
+        {            
             if (file.Length > 0)
             {
                 _degiroController.ImportDegiro(new StreamReader(file.OpenReadStream()));
@@ -34,6 +33,7 @@ namespace PortfolioTracker.Server.Controllers
             }
             return BadRequest();
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Get()

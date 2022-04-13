@@ -23,8 +23,7 @@ namespace PortfolioTracker.Implementation.Resolvers
             {
                 case APIType.YAHOOFINANCE:
                     var result = await _yahooFinanceClient.GetYahooFinanceRootResultForSymbols(symbols);
-                    return result.QuoteResponse.Result.Select(x => x.RegularMarketPrice).ToList();
-                    break;
+                    return result.QuoteResponse.Result.Select(x => x.RegularMarketPrice).ToList();                    
                 case APIType.BINANCE:
                     throw new NotImplementedException($"{apiType.ToString()} is not supported");
                 default:
@@ -34,7 +33,7 @@ namespace PortfolioTracker.Implementation.Resolvers
             }
         }
 
-        //TODO: Properly refactor the model to support dynamic symbols.
+        //TODO: Properly refactor the model to support dynamic symbols and max 5 symbols
         public async Task<List<AssetHistory>> GetAssetValueHistory(APIType apiType, IEnumerable<string> symbols)
         {
             List<AssetHistory> response = new();
@@ -43,36 +42,20 @@ namespace PortfolioTracker.Implementation.Resolvers
                 case APIType.YAHOOFINANCE:
                     var assetHistoryResponse = await _yahooFinanceClient.GetAssetHistoryRespone(symbols);
 
-                    var assetHistoryIWDA = new AssetHistory();
-                    assetHistoryIWDA.SymbolName = "IWDA.AS";
-                    for (int i = 0; i < assetHistoryResponse.AssetHistoriesIWDA.Timestamp.Count; i++)
+                    foreach (var assetHistory in assetHistoryResponse)
                     {
-                        var datetimeoffset = DateTimeOffset.FromUnixTimeSeconds(assetHistoryResponse.AssetHistoriesIWDA.Timestamp[i]);
-                        assetHistoryIWDA.AssetHistoryValues.Add(datetimeoffset.Date, assetHistoryResponse.AssetHistoriesIWDA.Close[i].Value);
-                    }
-
-                    var assetHistoryIEMA = new AssetHistory();
-                    assetHistoryIEMA.SymbolName = "IEMA.AS";
-                    for (int i = 0; i < assetHistoryResponse.AssetHistoriesIEMA.Timestamp.Count; i++)
-                    {
-                        var datetimeoffset = DateTimeOffset.FromUnixTimeSeconds(assetHistoryResponse.AssetHistoriesIEMA.Timestamp[i]);
-                        assetHistoryIEMA.AssetHistoryValues.Add(datetimeoffset.Date, assetHistoryResponse.AssetHistoriesIEMA.Close[i].Value);
-                    }
-
-                    var assetHistoryArgenta = new AssetHistory();
-                    assetHistoryArgenta.SymbolName = "0P00000NFB.F";
-                    for (int i = 0; i < assetHistoryResponse.AssetHistoriesArgenta.Timestamp.Count; i++)
-                    {
-                        var datetimeoffset = DateTimeOffset.FromUnixTimeSeconds(assetHistoryResponse.AssetHistoriesArgenta.Timestamp[i]);
-                        if (assetHistoryResponse.AssetHistoriesArgenta.Close[i].HasValue)
+                        var newAssetHistory = new AssetHistory();
+                        newAssetHistory.SymbolName = assetHistory.Key;
+                        for (int i = 0; i < assetHistory.Value.Timestamp.Count; i++)
                         {
-                            assetHistoryArgenta.AssetHistoryValues.Add(datetimeoffset.Date, assetHistoryResponse.AssetHistoriesArgenta.Close[i].Value);
-                        }
+                            var datetimeoffset = DateTimeOffset.FromUnixTimeSeconds(assetHistory.Value.Timestamp[i]);
+                            if (assetHistory.Value.Close[i].HasValue)
+                            {
+                                newAssetHistory.AssetHistoryValues.Add(datetimeoffset.Date, assetHistory.Value.Close[i].Value);
+                            }
+                        }                        
+                        response.Add(newAssetHistory);
                     }
-
-                    response.Add(assetHistoryIWDA);
-                    response.Add(assetHistoryIEMA);
-                    response.Add(assetHistoryArgenta);
 
                     return response;         
 

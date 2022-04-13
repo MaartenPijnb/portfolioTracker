@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PortfolioTracker.Implementation\PortfolioTracker.Implementation.csproj" />
     <ProjectReference Include="..\PortfolioTracker.Model\PortfolioTracker.Model.csproj" />
   </ItemGroup>
 

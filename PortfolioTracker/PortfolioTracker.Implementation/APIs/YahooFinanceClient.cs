@@ -30,10 +30,10 @@ namespace PortfolioTracker.Implementation.APIs
             InitializeAPI();
         }
 
-        public async Task<AssetHistoryResponse> GetAssetHistoryRespone(IEnumerable<string> symbols)
+        public async Task<Dictionary<string, AssetHistory>> GetAssetHistoryRespone(IEnumerable<string> symbols)
         {
             var symbolsAsString = string.Join(",", symbols);
-            return await _httpclient.GetFromJsonAsync<AssetHistoryResponse>(_httpclient.BaseAddress + "v8/finance/spark?interval=1d&range=5y&symbols=" + symbolsAsString, _serializeOptions);
+            return await _httpclient.GetFromJsonAsync<Dictionary<string, AssetHistory>>(_httpclient.BaseAddress + "v8/finance/spark?interval=1d&range=5y&symbols=" + symbolsAsString, _serializeOptions);
         }
 
         public async Task<YahooFinanceRootResult> GetYahooFinanceRootResultForSymbols(List<string> symbols)

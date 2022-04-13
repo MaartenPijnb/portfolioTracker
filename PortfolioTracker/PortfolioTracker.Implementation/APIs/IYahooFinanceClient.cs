@@ -11,6 +11,6 @@ namespace PortfolioTracker.Implementation.APIs
     public interface IYahooFinanceClient
     {
         Task<YahooFinanceRootResult> GetYahooFinanceRootResultForSymbols(List<string> symbols);
-        Task<AssetHistoryResponse> GetAssetHistoryRespone(IEnumerable<string> symbols);
+        Task<Dictionary<string,AssetHistory>> GetAssetHistoryRespone(IEnumerable<string> symbols);
     }
 }

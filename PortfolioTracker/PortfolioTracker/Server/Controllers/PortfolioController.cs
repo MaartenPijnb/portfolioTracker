@@ -98,7 +98,6 @@ namespace PortfolioTracker.Server.Controllers
 
             //ONLY ETFS SUPPORTED ATM
             var allSupportedAssets = await _dbContext.Assets.Where(x => x.AssetType == AssetType.Etf || x.AssetId == 3).ToListAsync();
-
             var assets = allSupportedAssets.Select(x => x.SymbolForApi).ToArray();
             var asserthistoryPerSymbols = await _assetValueResolver.GetAssetValueHistory(APIType.YAHOOFINANCE, assets);
 
