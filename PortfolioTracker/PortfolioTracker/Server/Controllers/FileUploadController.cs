@@ -24,6 +24,7 @@ namespace PortfolioTracker.Server.Controllers
         }
 
         [HttpPost]
+        [Route(nameof(UploadDegiro))]
         public IActionResult UploadDegiro(IFormFile file)
         {            
             if (file.Length > 0)
@@ -34,6 +35,17 @@ namespace PortfolioTracker.Server.Controllers
             return BadRequest();
         }
 
+        [HttpPost]
+        [Route(nameof(UploadBitvavo))]
+        public IActionResult UploadBitvavo(IFormFile file)
+        {
+            if (file.Length > 0)
+            {
+                _degiroController.ImportDegiro(new StreamReader(file.OpenReadStream()));
+                return Ok();
+            }
+            return BadRequest();
+        }
 
         [HttpGet]
         public async Task<IActionResult> Get()

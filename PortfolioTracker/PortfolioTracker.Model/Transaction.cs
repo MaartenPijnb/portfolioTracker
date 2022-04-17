@@ -24,6 +24,7 @@ namespace PortfolioTracker.Model
     public enum TransactionType
     {
         BUY,
-        SELL
+        SELL,
+        STAKING
     }
 }

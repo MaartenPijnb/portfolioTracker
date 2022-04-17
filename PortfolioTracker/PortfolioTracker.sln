@@ -20,7 +20,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioTracker.Playground
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioTracker.Implementation", "PortfolioTracker.Implementation\PortfolioTracker.Implementation.csproj", "{D7BDAE45-8033-4065-A57B-7A890C32FDAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortfolioTracker.Scheduler", "Scheduler\PortfolioTracker.Scheduler.csproj", "{5C6FF261-3087-4155-AC0E-68DB5209AE1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioTracker.Scheduler", "Scheduler\PortfolioTracker.Scheduler.csproj", "{5C6FF261-3087-4155-AC0E-68DB5209AE1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortfolioTracker.Bitvavo.Runner", "PortfolioTracker.Bitvavo.Runner\PortfolioTracker.Bitvavo.Runner.csproj", "{0881320C-B871-4003-8835-2A86675C5462}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +58,10 @@ Global
 		{5C6FF261-3087-4155-AC0E-68DB5209AE1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C6FF261-3087-4155-AC0E-68DB5209AE1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C6FF261-3087-4155-AC0E-68DB5209AE1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0881320C-B871-4003-8835-2A86675C5462}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0881320C-B871-4003-8835-2A86675C5462}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0881320C-B871-4003-8835-2A86675C5462}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0881320C-B871-4003-8835-2A86675C5462}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

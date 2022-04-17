@@ -108,7 +108,7 @@ namespace PortfolioTracker.Server.Migrations
                             ISN = "IE00B4L5Y983",
                             Name = "iShares Core MSCI World UCITS ETF USD (Acc)",
                             SymbolForApi = "IWDA.AS",
-                            UpdatedOn = new DateTime(2022, 3, 25, 15, 14, 5, 242, DateTimeKind.Local).AddTicks(8392),
+                            UpdatedOn = new DateTime(2022, 4, 14, 9, 41, 4, 11, DateTimeKind.Local).AddTicks(8680),
                             Value = 0m
                         },
                         new
@@ -119,7 +119,7 @@ namespace PortfolioTracker.Server.Migrations
                             ISN = "IE00B4L5YC18",
                             Name = "iShares MSCI EM UCITS ETF USD (Acc)",
                             SymbolForApi = "IEMA.AS",
-                            UpdatedOn = new DateTime(2022, 3, 25, 15, 14, 5, 242, DateTimeKind.Local).AddTicks(8437),
+                            UpdatedOn = new DateTime(2022, 4, 14, 9, 41, 4, 11, DateTimeKind.Local).AddTicks(8743),
                             Value = 0m
                         },
                         new
@@ -130,7 +130,7 @@ namespace PortfolioTracker.Server.Migrations
                             ISN = "BE0172903495",
                             Name = "Argenta Pensioenspaarfonds",
                             SymbolForApi = "0P00000NFB.F",
-                            UpdatedOn = new DateTime(2022, 3, 25, 15, 14, 5, 242, DateTimeKind.Local).AddTicks(8439),
+                            UpdatedOn = new DateTime(2022, 4, 14, 9, 41, 4, 11, DateTimeKind.Local).AddTicks(8747),
                             Value = 0m
                         },
                         new
@@ -138,10 +138,10 @@ namespace PortfolioTracker.Server.Migrations
                             AssetId = 4,
                             APIId = 2,
                             AssetType = 5,
-                            ISN = "not applicable",
+                            ISN = "Groepsverzekering IS",
                             Name = "Groepsverzekering IS",
                             SymbolForApi = "not applicable",
-                            UpdatedOn = new DateTime(2022, 3, 25, 15, 14, 5, 242, DateTimeKind.Local).AddTicks(8442),
+                            UpdatedOn = new DateTime(2022, 4, 14, 9, 41, 4, 11, DateTimeKind.Local).AddTicks(8750),
                             Value = 0m
                         });
                 });
