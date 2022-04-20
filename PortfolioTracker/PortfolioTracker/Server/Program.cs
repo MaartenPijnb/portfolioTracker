@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
+using PortfolioTracker.Bitvavo.Runner.BitvavoController;
 using PortfolioTracker.Degiro.Runner.Controller;
 using PortfolioTracker.Implementation.APIs;
 using PortfolioTracker.Implementation.Resolvers;
@@ -37,6 +38,7 @@ builder.Services.AddTransient<IAssetService, AssetService>();
 builder.Services.AddTransient<IPortfolioHistoryService, PortfolioHistoryService>();
 builder.Services.AddTransient<IPortfolioService, PortfolioService>();
 builder.Services.AddTransient<IDegiroController, DegiroController>();
+builder.Services.AddTransient<IBitvavoController, BitvavoController>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

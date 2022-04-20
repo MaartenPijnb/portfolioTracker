@@ -18,12 +18,12 @@ namespace PortfolioTracker.Implementation.Models.Yahoo
         public double RegularMarketPreviousClose { get; set; }
         public double Bid { get; set; }
         public double Ask { get; set; }
-        public int BidSize { get; set; }
-        public int AskSize { get; set; }
+        public double BidSize { get; set; }
+        public double AskSize { get; set; }
         public string FullExchangeName { get; set; }
         public double RegularMarketOpen { get; set; }
-        public int AverageDailyVolume3Month { get; set; }
-        public int AverageDailyVolume10Day { get; set; }
+        public double AverageDailyVolume3Month { get; set; }
+        public double AverageDailyVolume10Day { get; set; }
         public double FiftyTwoWeekLowChange { get; set; }
         public double FiftyTwoWeekLowChangePercent { get; set; }
         public string FiftyTwoWeekRange { get; set; }
@@ -36,12 +36,12 @@ namespace PortfolioTracker.Implementation.Models.Yahoo
         public int PriceHint { get; set; }
         public double RegularMarketChange { get; set; }
         public double RegularMarketChangePercent { get; set; }
-        public int RegularMarketTime { get; set; }
+        public double RegularMarketTime { get; set; }
         public double RegularMarketPrice { get; set; }
         public double RegularMarketDayHigh { get; set; }
         public string RegularMarketDayRange { get; set; }
         public double RegularMarketDayLow { get; set; }
-        public int RegularMarketVolume { get; set; }
+        public double RegularMarketVolume { get; set; }
         public double FiftyDayAverage { get; set; }
         public double FiftyDayAverageChange { get; set; }
         public double FiftyDayAverageChangePercent { get; set; }

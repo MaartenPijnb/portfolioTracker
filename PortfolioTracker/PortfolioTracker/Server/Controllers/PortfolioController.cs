@@ -29,7 +29,7 @@ namespace PortfolioTracker.Server.Controllers
         [HttpGet]
         public async Task<IEnumerable<Portfolio>> Get()
         {
-            var portfolios = await _dbContext.Portfolio.Include(x => x.Asset).ToListAsync();
+            var portfolios = await _dbContext.Portfolio.Include(x => x.Asset).Where(x=>x.TotalShares !=0 ).ToListAsync();
 
             return portfolios;
         }
@@ -96,24 +96,45 @@ namespace PortfolioTracker.Server.Controllers
             var transactions = _dbContext.Transactions.ToList();
 
 
-            //ONLY ETFS SUPPORTED ATM
-            var allSupportedAssets = await _dbContext.Assets.Where(x => x.AssetType == AssetType.Etf || x.AssetId == 3).ToListAsync();
-            var assets = allSupportedAssets.Select(x => x.SymbolForApi).ToArray();
-            var asserthistoryPerSymbols = await _assetValueResolver.GetAssetValueHistory(APIType.YAHOOFINANCE, assets);
+            //ONLY ETFS SUPPORTED ATM and crypto
+            var allSupportedAssets = await _dbContext.Assets.Where(x => x.AssetType == AssetType.Etf || x.AssetId == 3 || x.AssetType == AssetType.Crypto).ToListAsync();
 
+            var assets = allSupportedAssets.Select(x => x.SymbolForApi).ToArray();
+            var assetsLength = assets.Length;
+            var skippedrecords = 0;
+            var asserthistoryPerSymbols = new List<AssetHistory>();
+
+            while (assetsLength !=0)
+            {              
+                var result = new List<AssetHistory>();
+                if (assetsLength >= 5)
+                {
+                    result = await _assetValueResolver.GetAssetValueHistory(APIType.YAHOOFINANCE, assets.Skip(skippedrecords).Take(5));
+                    skippedrecords += 5;
+                    assetsLength -= 5;
+                }
+                else
+                {
+                    result = await _assetValueResolver.GetAssetValueHistory(APIType.YAHOOFINANCE, assets.Skip(skippedrecords).Take(assetsLength));
+                    skippedrecords += assetsLength;
+                    assetsLength -= assetsLength;
+                }
+                asserthistoryPerSymbols.AddRange(result);
+            }
 
             while (transactionDate < DateTime.Now)
             {
-
                 var allTransactionUntilDate = transactions.Where(x => x.CreatedOn <= transactionDate).ToList();
-                var totalInvestedForDate = allTransactionUntilDate.Sum(x => x.TotalCosts);
+                var totalInvestedForDate = allTransactionUntilDate.Where(x=>x.TransactionType==TransactionType.BUY || x.TransactionType == TransactionType.STAKING).Sum(x => x.TotalCosts) - allTransactionUntilDate.Where(x => x.TransactionType == TransactionType.SELL).Sum(x => x.TotalCosts);
 
                 double totalActualOfAllAssetsValue = 0;
 
                 foreach (var transaction in allTransactionUntilDate.GroupBy(x => x.AssetId))
                 {
                     var portfoliohistory = new PortfolioHistory();
-                    double totalShares = Convert.ToDouble(transaction.Sum(x => x.AmountOfShares));
+                    double totalSharesBought = Convert.ToDouble(transaction.Where(x=>x.TransactionType == TransactionType.BUY || x.TransactionType == TransactionType.STAKING).Sum(x => x.AmountOfShares));
+                    double totalSharesSold = Convert.ToDouble(transaction.Where(x => x.TransactionType == TransactionType.SELL).Sum(x => x.AmountOfShares));
+                    double totalShares = totalSharesBought - totalSharesSold;
                     double totalActualOfAssetValue = 0;
                     var symbolname = allSupportedAssets.FirstOrDefault(x => x.AssetId == transaction.Key)?.SymbolForApi;
 

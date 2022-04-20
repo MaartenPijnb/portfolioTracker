@@ -31,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\PortfolioTracker.Bitvavo.Runner\PortfolioTracker.Bitvavo.Runner.csproj" />
     <ProjectReference Include="..\..\PortfolioTracker.Degiro.Runner\PortfolioTracker.Degiro.Runner.csproj" />
     <ProjectReference Include="..\..\PortfolioTracker.Implementation\PortfolioTracker.Implementation.csproj" />
     <ProjectReference Include="..\..\PortfolioTracker.Model\PortfolioTracker.Model.csproj" />

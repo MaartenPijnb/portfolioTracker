@@ -78,14 +78,14 @@ else
     <p>Loading...</p>
 }
 
-<RadzenDataGrid AllowColumnResize="true" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+<RadzenDataGrid AllowColumnResize="true" AllowSorting="true" PageSize="20" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                 Data="@portfolios" TItem="Portfolio">
     <Columns>
 
         <RadzenDataGridColumn MinWidth="300px" Width="50%" TItem="Portfolio" Property="Asset.Name" Title="Asset" />
         <RadzenDataGridColumn MinWidth="150px" Width="12%" TItem="Portfolio" Title="Huidige waarde">
             <Template Context="data">
-                <FormatCurrencyComponent CurrencyToDisplay=@data.TotalInvestedValue />
+                <FormatCurrencyComponent CurrencyToDisplay=@data.TotalValue />
             </Template>
         </RadzenDataGridColumn>
 

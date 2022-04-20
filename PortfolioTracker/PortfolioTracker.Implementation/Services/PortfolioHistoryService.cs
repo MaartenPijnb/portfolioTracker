@@ -20,8 +20,8 @@ namespace PortfolioTracker.Implementation.Services
             var portfolios = _dbContext.Portfolio.ToList();
             var portfolioHistory = new PortfolioHistory
             {
-                TotalInvestedPortfolioValue = portfolios.Sum(x => x.TotalInvestedValue),
-                TotalPortfolioValue = portfolios.Sum(x => x.TotalValue)
+                TotalInvestedPortfolioValue = portfolios.Where(x=>x.TotalShares!=0).Sum(x => x.TotalInvestedValue),
+                TotalPortfolioValue = portfolios.Where(x => x.TotalShares != 0).Sum(x => x.TotalValue)
             };
             portfolioHistory.Profit = portfolioHistory.TotalPortfolioValue - portfolioHistory.TotalInvestedPortfolioValue;
             portfolioHistory.Percentage = (portfolioHistory.TotalPortfolioValue - portfolioHistory.TotalInvestedPortfolioValue) / portfolioHistory.TotalInvestedPortfolioValue * 100;

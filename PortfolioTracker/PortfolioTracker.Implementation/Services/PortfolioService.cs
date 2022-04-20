@@ -33,9 +33,12 @@ namespace PortfolioTracker.Implementation.Services
                     portfolio = new Portfolio();
                 }
 
-                portfolio.TotalShares = item.Sum(x => x.AmountOfShares);
-                portfolio.TotalInvestedValue = item.Sum(x => x.TotalCosts);
-                portfolio.AveragePricePerShare = item.Average(x => x.PricePerShare);
+                portfolio.TotalShares = item.Where(x=>x.TransactionType!= TransactionType.SELL).Sum(x => x.AmountOfShares) - item.Where(x => x.TransactionType == TransactionType.SELL).Sum(x => x.AmountOfShares);
+                
+                portfolio.TotalInvestedValue = item.Where(x => x.TransactionType != TransactionType.SELL).Sum(x => x.TotalCosts) - item.Where(x => x.TransactionType == TransactionType.SELL).Sum(x => x.TotalCosts);
+
+                //average klopt niet, moet weighted zijn....
+                portfolio.AveragePricePerShare = item.Where(x => x.TransactionType != TransactionType.SELL).Average(x => x.PricePerShare);
                 if(_dbContext.Assets.Single(x => x.AssetId == item.Key).AssetType  != AssetType.Groepsverzekering)
                 {
                     portfolio.TotalValue = _dbContext.Assets.Single(x => x.AssetId == item.Key).Value * portfolio.TotalShares;

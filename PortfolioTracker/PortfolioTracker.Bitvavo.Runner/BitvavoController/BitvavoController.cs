@@ -21,7 +21,6 @@ namespace PortfolioTracker.Bitvavo.Runner.BitvavoController
 
         public async Task ImportBitvavo(StreamReader bitvavoCsvStream)
         {
-            var allAssets = _dbcontext.Assets.ToList();
             var allApis = _dbcontext.APIs.ToList();
             using (var csv = new CsvReader(bitvavoCsvStream, CultureInfo.InvariantCulture))
             {
@@ -77,9 +76,9 @@ namespace PortfolioTracker.Bitvavo.Runner.BitvavoController
                     }
 
                     var assetId = 0;
-                    if (allAssets.Any(x => x.ISN == cryptoCurrencySymbol))
+                    if (_dbcontext.Assets.Any(x => x.ISN == cryptoCurrencySymbol))
                     {
-                        assetId = allAssets.Single(x => x.ISN == cryptoCurrencySymbol).AssetId;
+                        assetId = _dbcontext.Assets.Single(x => x.ISN == cryptoCurrencySymbol).AssetId;
                     }
                     else
                     {
@@ -95,6 +94,7 @@ namespace PortfolioTracker.Bitvavo.Runner.BitvavoController
                         };
                         await _dbcontext.AddAsync(newAsset);
                         await _dbcontext.SaveChangesAsync();
+
                         assetId = newAsset.AssetId;
                     }
 
@@ -115,9 +115,9 @@ namespace PortfolioTracker.Bitvavo.Runner.BitvavoController
                 foreach (var stakingRecord in cryptoRecords.Where(x => x.Type == BitvavoType.staking))
                 {
                     var assetId = 0;
-                    if (allAssets.Any(x => x.ISN == stakingRecord.Currency))
+                    if (_dbcontext.Assets.Any(x => x.ISN == stakingRecord.Currency))
                     {
-                        assetId = allAssets.Single(x => x.ISN == stakingRecord.Currency).AssetId;
+                        assetId = _dbcontext.Assets.Single(x => x.ISN == stakingRecord.Currency).AssetId;
                     }
                     else
                     {
@@ -133,6 +133,7 @@ namespace PortfolioTracker.Bitvavo.Runner.BitvavoController
                         };
                         await _dbcontext.AddAsync(newAsset);
                         await _dbcontext.SaveChangesAsync();
+
                         assetId = newAsset.AssetId;
                     }
                     portfolioTransactionRecords.Add(new PortfolioTransaction
@@ -157,6 +158,8 @@ namespace PortfolioTracker.Bitvavo.Runner.BitvavoController
                 }
 
                 portfolioTransactionRecords = portfolioTransactionRecords.OrderBy(x => x.CreatedOn).ToList();
+                await _dbcontext.Transactions.AddRangeAsync(portfolioTransactionRecords);
+                await _dbcontext.SaveChangesAsync();
             }
         }
     }
