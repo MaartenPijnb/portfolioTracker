@@ -29,7 +29,7 @@ namespace PortfolioTracker.Server.Controllers
         [HttpGet]
         public async Task<IEnumerable<Portfolio>> Get()
         {
-            var portfolios = await _dbContext.Portfolio.Include(x => x.Asset).Where(x=>x.TotalShares !=0 ).ToListAsync();
+            var portfolios = await _dbContext.Portfolio.Include(x => x.Asset).Where(x=>x.TotalShares !=0).OrderByDescending(x=>x.TotalValue).ToListAsync();
 
             return portfolios;
         }
