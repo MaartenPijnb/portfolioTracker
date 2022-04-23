@@ -196,19 +196,34 @@ else
     protected override async Task OnInitializedAsync()
     {
         portfolios = await Http.GetFromJsonAsync<IEnumerable<Portfolio>>("Portfolio");
-        
+
         totalValue = portfolios.Sum(x => x.TotalValue);
         totalTransactionCosts = await Http.GetFromJsonAsync<decimal>("Transaction/TotalTransactionCosts");
         totalTaxesCosts = await Http.GetFromJsonAsync<decimal>("Transaction/TotalTaxes");
         profit = portfolios.Sum(x => x.Profit);
 
-        piePortfolioItems = portfolios.Select(x => new PiePortfolioItem
+        piePortfolioItems = portfolios.Where(x=> x.TotalValue / totalValue * 100 > 3).Select(x => 
+                       new PiePortfolioItem
             {
                 Name = x.Asset.Name,
                 SymbolName = x.Asset.SymbolForApi,
                 Percentage = x.TotalValue / totalValue * 100
             }).ToList();
 
+        var allSmallPortfolios = portfolios.Where(x => x.TotalValue / totalValue * 100 < 3);
+        decimal totalPercentage = 0;
+        allSmallPortfolios.ToList().ForEach(x =>
+        {
+            totalPercentage += x.TotalValue / totalValue * 100;
+        });
+
+        piePortfolioItems.Add(new PiePortfolioItem
+            {
+                Name = "Others",
+                SymbolName = "Others",
+                Percentage = totalPercentage
+            });
+        piePortfolioItems=piePortfolioItems.OrderByDescending(x => x.Percentage).ToList();
         var portfoliosGroupedByType = portfolios.ToList().GroupBy(x => x.Asset.AssetType).ToList();
 
         foreach (var portfolioGroupedByType in portfoliosGroupedByType)
@@ -220,7 +235,7 @@ else
                         Percentage = portfolioGroupedByType.Sum(x => x.TotalValue) / totalValue * 100
                     });
         }
-
+        assetTypePortfolioItems= assetTypePortfolioItems.OrderByDescending(x => x.Percentage).ToList();
         profitsPortfolioItems.Add(new PiePortfolioItem
             {
                 Name = "Total Invested",
