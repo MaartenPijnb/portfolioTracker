@@ -125,14 +125,14 @@ namespace PortfolioTracker.Server.Controllers
             while (transactionDate < DateTime.Now)
             {
                 var allTransactionUntilDate = transactions.Where(x => x.CreatedOn <= transactionDate).ToList();
-                var totalInvestedForDate = allTransactionUntilDate.Where(x=>x.TransactionType==TransactionType.BUY || x.TransactionType == TransactionType.STAKING).Sum(x => x.TotalCosts) - allTransactionUntilDate.Where(x => x.TransactionType == TransactionType.SELL).Sum(x => x.TotalCosts);
+                var totalInvestedForDate = allTransactionUntilDate.Where(x=>x.TransactionType!=TransactionType.SELL).Sum(x => x.TotalCosts) - allTransactionUntilDate.Where(x => x.TransactionType == TransactionType.SELL).Sum(x => x.TotalCosts);
 
                 double totalActualOfAllAssetsValue = 0;
 
                 foreach (var transaction in allTransactionUntilDate.GroupBy(x => x.AssetId))
                 {
                     var portfoliohistory = new PortfolioHistory();
-                    double totalSharesBought = Convert.ToDouble(transaction.Where(x=>x.TransactionType == TransactionType.BUY || x.TransactionType == TransactionType.STAKING).Sum(x => x.AmountOfShares));
+                    double totalSharesBought = Convert.ToDouble(transaction.Where(x=> x.TransactionType != TransactionType.SELL).Sum(x => x.AmountOfShares));
                     double totalSharesSold = Convert.ToDouble(transaction.Where(x => x.TransactionType == TransactionType.SELL).Sum(x => x.AmountOfShares));
                     double totalShares = totalSharesBought - totalSharesSold;
                     double totalActualOfAssetValue = 0;

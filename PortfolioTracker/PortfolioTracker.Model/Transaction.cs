@@ -15,9 +15,10 @@ namespace PortfolioTracker.Model
         public decimal TransactionCosts { get; set; }
         public decimal TaxesCosts { get; set; }
         public Guid? OrderId { get; set; }
-
         public int AssetId{ get; set; }
         public Asset Asset{ get; set; }
+        public string SymbolTemp { get; set; }
+        public BrokerType BrokerType{ get; set; }
 
     }
 
@@ -25,6 +26,16 @@ namespace PortfolioTracker.Model
     {
         BUY,
         SELL,
-        STAKING
+        STAKING,
+        CREDITCARD_CASHBACK,
+        REFERAL
+    }
+
+    public enum BrokerType
+    {
+        UNKNOWN,
+        DEGIRO,
+        BITVAVO,
+        CRYPTOCOM
     }
 }
