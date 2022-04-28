@@ -13,10 +13,11 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
     public class CryptoController : ICryptoController
     {
         private readonly MPortfolioDBContext _dbcontext;
-
+        private List<Asset> _assets;
         public CryptoController(MPortfolioDBContext dbContext)
         {
             _dbcontext = dbContext;
+            _assets = dbContext.Assets.ToList();
         }
 
       
@@ -37,7 +38,6 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                         TransactionType = TransactionType.STAKING,
                         BrokerType = BrokerType.CRYPTOCOM,
                         CreatedOn = cryptoRecordEarn.Timestamp,
-                        SymbolTemp = cryptoRecordEarn.Currency,
                         AmountOfShares = cryptoRecordEarn.Amount,
                         TotalCosts = 0,
                         AssetId = assetId
@@ -61,7 +61,6 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                         TransactionType = TransactionType.BUY,
                         BrokerType = BrokerType.CRYPTOCOM,
                         CreatedOn = cryptoRecordCryptoPurchase.Timestamp,
-                        SymbolTemp = cryptoRecordCryptoPurchase.ToCurrency,
                         AmountOfShares = cryptoRecordCryptoPurchase.ToAmount.Value,
                         PricePerShare = cryptoRecordCryptoPurchase.NativeAmount / cryptoRecordCryptoPurchase.ToAmount.Value,                        
                         AssetId = assetId
@@ -76,7 +75,6 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                         TransactionType = TransactionType.SELL,
                         BrokerType = BrokerType.CRYPTOCOM,
                         CreatedOn = cryptoRecordCryptoPurchase.Timestamp,
-                        SymbolTemp = cryptoRecordCryptoPurchase.Currency,
                         AmountOfShares = cryptoRecordCryptoPurchase.Amount * -1,
                         PricePerShare = cryptoRecordCryptoPurchase.NativeAmount / cryptoRecordCryptoPurchase.Amount * -1,
                         AssetId = assetId
@@ -100,7 +98,6 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                         TransactionType = TransactionType.BUY,
                         BrokerType = BrokerType.CRYPTOCOM,
                         CreatedOn = cryptoRecordCryptoPurchase.Timestamp,
-                        SymbolTemp = cryptoRecordCryptoPurchase.Currency,
                         AmountOfShares = cryptoRecordCryptoPurchase.Amount,
                         PricePerShare = cryptoRecordCryptoPurchase.NativeAmount / cryptoRecordCryptoPurchase.Amount,
                         AssetId = assetId
@@ -123,7 +120,6 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                         TransactionType = TransactionType.BUY,
                         BrokerType = BrokerType.CRYPTOCOM,
                         CreatedOn = cryptoRecordCryptoPurchaseFiatWallet.Timestamp,
-                        SymbolTemp = cryptoRecordCryptoPurchaseFiatWallet.ToCurrency,
                         AmountOfShares = cryptoRecordCryptoPurchaseFiatWallet.ToAmount.Value,
                         PricePerShare = cryptoRecordCryptoPurchaseFiatWallet.NativeAmount / cryptoRecordCryptoPurchaseFiatWallet.ToAmount.Value,
                         AssetId = assetId
@@ -149,7 +145,6 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                         TransactionType = TransactionType.SELL,
                         BrokerType = BrokerType.CRYPTOCOM,
                         CreatedOn = cryptoRecordCryptoPurchaseFiatWallet.Timestamp,
-                        SymbolTemp = cryptoRecordCryptoPurchaseFiatWallet.Currency,
                         AmountOfShares = cryptoRecordCryptoPurchaseFiatWallet.Amount * -1,
                         PricePerShare = cryptoRecordCryptoPurchaseFiatWallet.NativeAmount / cryptoRecordCryptoPurchaseFiatWallet.Amount * -1,
                         AssetId = assetId
@@ -170,7 +165,6 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                         TransactionType = TransactionType.CREDITCARD_CASHBACK,
                         BrokerType = BrokerType.CRYPTOCOM,
                         CreatedOn = cryptoRecordCardCashBack.Timestamp,
-                        SymbolTemp = cryptoRecordCardCashBack.Currency,
                         AmountOfShares = cryptoRecordCardCashBack.Amount,
                         PricePerShare = 0,
                         TotalCosts = 0,
@@ -189,7 +183,6 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                         TransactionType = TransactionType.REFERAL,
                         BrokerType = BrokerType.CRYPTOCOM,
                         CreatedOn = cryptoRecordReferal.Timestamp,
-                        SymbolTemp = cryptoRecordReferal.Currency,
                         AmountOfShares = cryptoRecordReferal.Amount,
                         PricePerShare = 0,
                         TotalCosts = 0,
@@ -197,13 +190,13 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                     });
                 }
 
-
-
-
+                await _dbcontext.Transactions.AddRangeAsync(PortfolioTransactions);
+                await _dbcontext.SaveChangesAsync();
                 foreach (var portfolioRecord in PortfolioTransactions)
                 {
-                    Console.WriteLine($"Op {portfolioRecord.CreatedOn} heb je een {portfolioRecord.TransactionType} gedaan van {portfolioRecord.AmountOfShares} {portfolioRecord.SymbolTemp} aan {portfolioRecord.PricePerShare} euro voor in totaal aan {portfolioRecord.TotalCosts}");
+                    Console.WriteLine($"Op {portfolioRecord.CreatedOn} heb je een {portfolioRecord.TransactionType} gedaan van {portfolioRecord.AmountOfShares} {portfolioRecord.AssetId} aan {portfolioRecord.PricePerShare} euro voor in totaal aan {portfolioRecord.TotalCosts}");
                 }
+
 
                 Console.WriteLine("crypto.com generated");
             }
@@ -212,9 +205,9 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
         private async Task<int> GetOrCreateAsset(string currency)
         {
             var assetId = 0;
-            if (_dbcontext.Assets.Any(x => x.ISN == currency))
+            if (_assets.Any(x => x.ISN == currency))
             {
-                assetId = _dbcontext.Assets.Single(x => x.ISN == currency).AssetId;
+                assetId = _assets.Single(x => x.ISN == currency).AssetId;
             }
             else
             {
@@ -232,6 +225,7 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                 await _dbcontext.SaveChangesAsync();
 
                 assetId = newAsset.AssetId;
+                _assets.Add(newAsset);
             }
 
             return assetId;

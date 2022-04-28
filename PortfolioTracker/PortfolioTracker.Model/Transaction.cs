@@ -16,8 +16,7 @@ namespace PortfolioTracker.Model
         public decimal TaxesCosts { get; set; }
         public Guid? OrderId { get; set; }
         public int AssetId{ get; set; }
-        public Asset Asset{ get; set; }
-        public string SymbolTemp { get; set; }
+        public Asset Asset{ get; set; }        
         public BrokerType BrokerType{ get; set; }
 
     }
@@ -36,6 +35,8 @@ namespace PortfolioTracker.Model
         UNKNOWN,
         DEGIRO,
         BITVAVO,
-        CRYPTOCOM
+        CRYPTOCOM,
+        CRYTPCOMEXCHANGE,
+        HOTBIT
     }
 }

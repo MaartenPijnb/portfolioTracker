@@ -28,7 +28,7 @@ namespace PortfolioTracker.Implementation.Resolvers
                     throw new NotImplementedException($"{apiType.ToString()} is not supported");
                 default:
                 case APIType.NOTAPPLICABLE:
-                    return new List<double>{0 };
+                    return new List<double>{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
                     throw new NotSupportedException();
             }
         }

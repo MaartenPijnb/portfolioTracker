@@ -31,11 +31,11 @@ namespace PortfolioTracker.Server.Controllers
 
         [HttpPost]
         [Route(nameof(UploadDegiro))]
-        public IActionResult UploadDegiro(IFormFile file)
+        public async Task<IActionResult> UploadDegiro(IFormFile file)
         {            
             if (file.Length > 0)
             {
-                _degiroController.ImportDegiro(new StreamReader(file.OpenReadStream()));
+                await _degiroController.ImportDegiro(new StreamReader(file.OpenReadStream()));
                 return Ok();
             }
             return BadRequest();

@@ -8,7 +8,7 @@
 
 <PageTitle>Portfolio Tracker</PageTitle>
 
-<h1>Portfolio Tracker - Beta 0.2</h1>
+<h1>Portfolio Tracker - Beta 0.3</h1>
 
 <h3>Huidig portfolio:</h3>
 @if (isLoadedComplete)
@@ -79,7 +79,7 @@ else
 }
 
 <RadzenDataGrid AllowColumnResize="true" AllowSorting="true" PageSize="20" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                Data="@portfolios" TItem="Portfolio">
+                Data="@portfoliosUnRealised" TItem="Portfolio">
     <Columns>
 
         <RadzenDataGridColumn MinWidth="300px" Width="50%" TItem="Portfolio" Property="Asset.Name" Title="Asset" />
@@ -105,6 +105,54 @@ else
         <RadzenDataGridColumn MinWidth="100px" Width="16%" TItem="Portfolio" Title="Portfolio weight">
             <Template Context="data">
                 @decimal.Round(data.TotalValue / totalValue * 100, 2)%
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+<h3>Gerealiseerd portfolio:</h3>
+
+<div class="row">
+    <div class="col-md-3 p-3">
+        <RadzenCard class="rz-card-portfoliohistory">
+            <h4 class="mb-3">Total value</h4>
+            <p>€ @totalRealisedValue.ToString("N2", CultureInfo.CreateSpecificCulture("fr-FR"))</p>
+        </RadzenCard>
+    </div>
+    <div class="col-md-3 p-3">
+        <RadzenCard class="rz-card-portfoliohistory">
+            <h4 class="mb-3">Profit</h4>
+            <p>€ @realisedProfit.ToString("N2", CultureInfo.CreateSpecificCulture("fr-FR"))  </p>
+        </RadzenCard>
+    </div>
+</div>
+<RadzenDataGrid AllowColumnResize="true" AllowSorting="true" PageSize="20" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                Data="@portfoliosRealised" TItem="Portfolio">
+    <Columns>
+
+        <RadzenDataGridColumn MinWidth="300px" Width="50%" TItem="Portfolio" Property="Asset.Name" Title="Asset" />
+        <RadzenDataGridColumn MinWidth="150px" Width="12%" TItem="Portfolio" Title="Gekocht voor">
+            <Template Context="data">
+                <FormatCurrencyComponent CurrencyToDisplay=@data.TotalInvestedValue />
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn MinWidth="150px" Width="12%" TItem="Portfolio" Title="Winst / Verlies">
+            <Template Context="data">
+                <FormatCurrencyComponent CurrencyToDisplay=@data.Profit />
+            </Template>
+        </RadzenDataGridColumn>
+
+
+        <RadzenDataGridColumn MinWidth="100px" Width="10%" TItem="Portfolio" Title="Profit">
+            <Template Context="data">
+                @data.ProfitPercentage %
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn MinWidth="100px" Width="16%" TItem="Portfolio" Title="Portfolio weight">
+            <Template Context="data">
+                @decimal.Round(data.TotalValue / totalRealisedValue * 100, 2)%
             </Template>
         </RadzenDataGridColumn>
     </Columns>
@@ -186,23 +234,29 @@ else
     </div>
 </div>
 @code {
-    IEnumerable<Portfolio> portfolios;
+    IEnumerable<Portfolio> portfoliosRealised;
+    IEnumerable<Portfolio> portfoliosUnRealised;
     IEnumerable<PortfolioHistory> portfoliohistories;
     List<DataItem> totalInvestedValue, totalPortfolioValue;
     List<PiePortfolioItem> piePortfolioItems, assetTypePortfolioItems = new(), profitsPortfolioItems = new();
-    decimal totalValue, profit, totalTransactionCosts = 0, totalTaxesCosts = 0, percentage;
+    decimal totalValue,totalRealisedValue, profit, realisedProfit, totalTransactionCosts = 0, totalTaxesCosts = 0, percentage;
     bool isLoadedComplete = false;
     string test;
     protected override async Task OnInitializedAsync()
     {
-        portfolios = await Http.GetFromJsonAsync<IEnumerable<Portfolio>>("Portfolio");
+        var tempPortfolios = await Http.GetFromJsonAsync<IEnumerable<Portfolio>>("Portfolio");
+        portfoliosUnRealised = tempPortfolios.Where(x => x.TotalShares != 0);
+        portfoliosRealised = tempPortfolios.Where(x => x.TotalShares == 0);
 
-        totalValue = portfolios.Sum(x => x.TotalValue);
+        totalValue = portfoliosUnRealised.Sum(x => x.TotalValue);
+        totalRealisedValue = portfoliosRealised.Sum(x => x.TotalValue);
+
         totalTransactionCosts = await Http.GetFromJsonAsync<decimal>("Transaction/TotalTransactionCosts");
         totalTaxesCosts = await Http.GetFromJsonAsync<decimal>("Transaction/TotalTaxes");
-        profit = portfolios.Sum(x => x.Profit);
+        profit = portfoliosUnRealised.Sum(x => x.Profit);
+        realisedProfit = portfoliosRealised.Sum(x => x.Profit);
 
-        piePortfolioItems = portfolios.Where(x=> x.TotalValue / totalValue * 100 > 3).Select(x => 
+        piePortfolioItems = portfoliosUnRealised.Where(x=> x.TotalValue / totalValue * 100 > 5).Select(x => 
                        new PiePortfolioItem
             {
                 Name = x.Asset.Name,
@@ -210,7 +264,7 @@ else
                 Percentage = x.TotalValue / totalValue * 100
             }).ToList();
 
-        var allSmallPortfolios = portfolios.Where(x => x.TotalValue / totalValue * 100 < 3);
+        var allSmallPortfolios = portfoliosUnRealised.Where(x => x.TotalValue / totalValue * 100 < 5);
         decimal totalPercentage = 0;
         allSmallPortfolios.ToList().ForEach(x =>
         {
@@ -224,7 +278,7 @@ else
                 Percentage = totalPercentage
             });
         piePortfolioItems=piePortfolioItems.OrderByDescending(x => x.Percentage).ToList();
-        var portfoliosGroupedByType = portfolios.ToList().GroupBy(x => x.Asset.AssetType).ToList();
+        var portfoliosGroupedByType = portfoliosUnRealised.ToList().GroupBy(x => x.Asset.AssetType).ToList();
 
         foreach (var portfolioGroupedByType in portfoliosGroupedByType)
         {
@@ -239,7 +293,7 @@ else
         profitsPortfolioItems.Add(new PiePortfolioItem
             {
                 Name = "Total Invested",
-                Percentage =  portfolios.Sum(x=>x.TotalInvestedValue)  / totalValue *100 
+                Percentage =  portfoliosUnRealised.Sum(x=>x.TotalInvestedValue)  / totalValue *100 
             });
 
         profitsPortfolioItems.Add(new PiePortfolioItem

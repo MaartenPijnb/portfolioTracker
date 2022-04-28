@@ -35,18 +35,27 @@ namespace PortfolioTracker.Implementation.Services
 
                 portfolio.TotalShares = item.Where(x=>x.TransactionType!= TransactionType.SELL).Sum(x => x.AmountOfShares) - item.Where(x => x.TransactionType == TransactionType.SELL).Sum(x => x.AmountOfShares);
                 
-                portfolio.TotalInvestedValue = item.Where(x => x.TransactionType != TransactionType.SELL).Sum(x => x.TotalCosts) - item.Where(x => x.TransactionType == TransactionType.SELL).Sum(x => x.TotalCosts);
-
-                //average klopt niet, moet weighted zijn....
-                portfolio.AveragePricePerShare = item.Where(x => x.TransactionType != TransactionType.SELL).Average(x => x.PricePerShare);
-                if(_dbContext.Assets.Single(x => x.AssetId == item.Key).AssetType  != AssetType.Groepsverzekering)
+                if(portfolio.TotalShares == 0)
                 {
-                    portfolio.TotalValue = _dbContext.Assets.Single(x => x.AssetId == item.Key).Value * portfolio.TotalShares;
+                    portfolio.TotalInvestedValue = item.Where(x => x.TransactionType != TransactionType.SELL).Sum(x => x.TotalCosts);
+                    portfolio.TotalValue = item.Where(x => x.TransactionType == TransactionType.SELL).Sum(x => x.TotalCosts);
                 }
                 else
                 {
-                    portfolio.TotalValue = portfolio.TotalInvestedValue;
+                    portfolio.TotalInvestedValue = item.Where(x => x.TransactionType != TransactionType.SELL).Sum(x => x.TotalCosts) - item.Where(x => x.TransactionType == TransactionType.SELL).Sum(x => x.TotalCosts);
+                    if (_dbContext.Assets.Single(x => x.AssetId == item.Key).AssetType != AssetType.Groepsverzekering)
+                    {
+                        portfolio.TotalValue = _dbContext.Assets.Single(x => x.AssetId == item.Key).Value * portfolio.TotalShares;
+                    }
+                    else
+                    {
+                        portfolio.TotalValue = portfolio.TotalInvestedValue;
+                    }
                 }
+
+                //average klopt niet, moet weighted zijn....
+                portfolio.AveragePricePerShare = item.Where(x => x.TransactionType != TransactionType.SELL).Average(x => x.PricePerShare);
+               
                 portfolio.AssetID = item.Key;
                 portfolio.ProfitPercentage = (portfolio.TotalValue - portfolio.TotalInvestedValue) / portfolio.TotalInvestedValue * 100;
                 portfolio.Profit = portfolio.TotalValue - portfolio.TotalInvestedValue;

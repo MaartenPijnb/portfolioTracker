@@ -29,7 +29,7 @@ namespace PortfolioTracker.Server.Controllers
         [HttpGet]
         public async Task<IEnumerable<Portfolio>> Get()
         {
-            var portfolios = await _dbContext.Portfolio.Include(x => x.Asset).Where(x=>x.TotalShares !=0).OrderByDescending(x=>x.TotalValue).ToListAsync();
+            var portfolios = await _dbContext.Portfolio.Include(x => x.Asset).OrderByDescending(x=>x.TotalValue).ToListAsync();
 
             return portfolios;
         }
@@ -97,7 +97,7 @@ namespace PortfolioTracker.Server.Controllers
 
 
             //ONLY ETFS SUPPORTED ATM and crypto
-            var allSupportedAssets = await _dbContext.Assets.Where(x => x.AssetType == AssetType.Etf || x.AssetId == 3 || x.AssetType == AssetType.Crypto).ToListAsync();
+            var allSupportedAssets = await _dbContext.Assets.Where(x => x.AssetType == AssetType.Etf || x.AssetId == 3 || x.AssetId ==262|| x.AssetType == AssetType.Crypto).ToListAsync();
 
             var assets = allSupportedAssets.Select(x => x.SymbolForApi).ToArray();
             var assetsLength = assets.Length;

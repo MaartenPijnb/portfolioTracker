@@ -20,7 +20,7 @@ namespace PortfolioTracker.Degiro.Runner.Model
             Map(m => m.TotalPrice).Index(8);
             Map(m => m.CurrencySaldo).Name("Saldo");
             Map(m => m.RemainingValue).Index(10);
-            Map(m => m.OrderID);
+            Map(m => m.OrderID).Name("Order ID");
             Map(m => m.ISIN);
             Map(m => m.FX);
         }

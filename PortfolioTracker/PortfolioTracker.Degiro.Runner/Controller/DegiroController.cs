@@ -31,14 +31,14 @@ namespace PortfolioTracker.Degiro.Runner.Controller
                 Delimiter = ",",
                 HasHeaderRecord = true
             };
-            
+            var allOrderIds = _dbContext.Transactions.Select(t => t.OrderId).ToList();
             using (var csv = new CsvReader(degiroCsvStream, csvConfiguration))
             {
                 csv.Context.RegisterClassMap<DegiroRecordMap>();
                 var records = csv.GetRecords<DegiroRecord>().ToList();
 
 
-                    foreach (var record in records.Where(r => r.OrderID != null).GroupBy(x => x.OrderID))
+                    foreach (var record in records.Where(r => r.OrderID != null && !allOrderIds.Contains(r.OrderID)).GroupBy(x => x.OrderID))
                     {
                         var transaction = new PortfolioTransaction();
                         var isBasicInfoFilled = false;
@@ -50,6 +50,7 @@ namespace PortfolioTracker.Degiro.Runner.Controller
                                 transaction.OrderId = degiroOrderRecord.OrderID;
                                 transaction.AssetId = _dbContext.Assets.Single(x => x.ISN == degiroOrderRecord.ISIN).AssetId;
                                 transaction.CurencyType = degiroOrderRecord.Currency.Value;
+                                transaction.BrokerType = BrokerType.DEGIRO;
 
                                 isBasicInfoFilled = true;
                             }

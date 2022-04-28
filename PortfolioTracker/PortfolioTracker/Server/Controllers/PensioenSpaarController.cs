@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PortfolioTracker.Implementation.Resolvers;
 using PortfolioTracker.Model;
 
 namespace PortfolioTracker.Server.Controllers
@@ -6,9 +7,12 @@ namespace PortfolioTracker.Server.Controllers
     public class PensioenSpaarController : Controller
     {
         private readonly MPortfolioDBContext _dbContext;
-        public PensioenSpaarController(MPortfolioDBContext dbContext)
+        private readonly IAssetValueResolver _assetvalueResolver;
+
+        public PensioenSpaarController(MPortfolioDBContext dbContext, IAssetValueResolver assetValueResolver)
         {
             _dbContext = dbContext;
+            _assetvalueResolver = assetValueResolver;
         }
 
         [Route("CreatePensioenSpaarTransaction")]
@@ -50,6 +54,52 @@ namespace PortfolioTracker.Server.Controllers
         }
 
 
+        [Route("CreatePensioenSpaarTransactionAutomaticaly")]
+        [HttpPost]
+        public async Task<IActionResult> CreatePensioenSpaarTransactionv2()
+        {
+            //Started in 
+            var argentaAsset = _dbContext.Assets.First(x => x.AssetType == AssetType.Pensioen && x.Name.Contains("Argenta"));
+            var currentPrice = await _assetvalueResolver.GetAssetValue(argentaAsset.API.APIName, new List<string> { argentaAsset.SymbolForApi });
+
+            var transaction = new PortfolioTransaction();
+            transaction.AssetId = argentaAsset.AssetId;
+            transaction.PricePerShare = Convert.ToDecimal(currentPrice[0]);
+            transaction.TotalCosts = 82.50m; // DIFFERS EACH YEAR, HARDCODED 2022 VALUE IS 990 EURO PER MONTH
+            transaction.AmountOfShares = transaction.TotalCosts / transaction.PricePerShare;
+            transaction.TransactionType = TransactionType.BUY;
+            transaction.CreatedOn = DateTime.Now;
+
+            await _dbContext.Transactions.AddAsync(transaction);
+
+            await _dbContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [Route("CreateGroepsVerzekeringTransactionAutomaticaly")]
+        [HttpPost]
+        public async Task<IActionResult> CreateGroepsVerzekeringTransactionAutomaticaly()
+        {
+            //Started in 
+            var groepsVerzekeringAsset = _dbContext.Assets.First(x => x.AssetType == AssetType.Groepsverzekering && x.Name.Contains("IS"));
+
+            var transaction = new PortfolioTransaction();
+            transaction.AssetId = groepsVerzekeringAsset.AssetId;
+            transaction.PricePerShare = 178.13m;
+            transaction.TotalCosts = 178.13m; 
+            transaction.AmountOfShares = transaction.TotalCosts / transaction.PricePerShare;
+            transaction.TransactionType = TransactionType.BUY;
+            transaction.CreatedOn = DateTime.Now;
+
+            await _dbContext.Transactions.AddAsync(transaction);
+
+            await _dbContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
+
         [Route("CreateGroepsverzekeringTransaction")]
         [HttpPost]
         public async Task<IActionResult> CreateGroepsverzekeringTransaction(int assetId, DateTime startedOn)
@@ -58,7 +108,7 @@ namespace PortfolioTracker.Server.Controllers
             var transactionDate = startedOn;
             var transactionsToAdd = new List<PortfolioTransaction>();
 
-            while(transactionDate < DateTime.Now)
+            while (transactionDate < DateTime.Now)
             {
                 var transaction = new PortfolioTransaction();
                 transaction.AssetId = assetId;
