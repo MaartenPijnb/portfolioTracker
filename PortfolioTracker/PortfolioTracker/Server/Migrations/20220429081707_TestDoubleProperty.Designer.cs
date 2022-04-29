@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PortfolioTracker.Model;
 
@@ -11,9 +12,10 @@ using PortfolioTracker.Model;
 namespace PortfolioTracker.Server.Migrations
 {
     [DbContext(typeof(MPortfolioDBContext))]
-    partial class MPortfolioDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220429081707_TestDoubleProperty")]
+    partial class TestDoubleProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,8 +93,7 @@ namespace PortfolioTracker.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("Value")
-                        .HasPrecision(18, 8)
-                        .HasColumnType("decimal(18,8)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("AssetId");
 
@@ -109,7 +110,7 @@ namespace PortfolioTracker.Server.Migrations
                             ISN = "IE00B4L5Y983",
                             Name = "iShares Core MSCI World UCITS ETF USD (Acc)",
                             SymbolForApi = "IWDA.AS",
-                            UpdatedOn = new DateTime(2022, 4, 29, 10, 23, 23, 177, DateTimeKind.Local).AddTicks(428),
+                            UpdatedOn = new DateTime(2022, 4, 29, 10, 17, 6, 729, DateTimeKind.Local).AddTicks(883),
                             Value = 0m
                         },
                         new
@@ -120,7 +121,7 @@ namespace PortfolioTracker.Server.Migrations
                             ISN = "IE00B4L5YC18",
                             Name = "iShares MSCI EM UCITS ETF USD (Acc)",
                             SymbolForApi = "IEMA.AS",
-                            UpdatedOn = new DateTime(2022, 4, 29, 10, 23, 23, 177, DateTimeKind.Local).AddTicks(464),
+                            UpdatedOn = new DateTime(2022, 4, 29, 10, 17, 6, 729, DateTimeKind.Local).AddTicks(923),
                             Value = 0m
                         },
                         new
@@ -131,7 +132,7 @@ namespace PortfolioTracker.Server.Migrations
                             ISN = "BE0172903495",
                             Name = "Argenta Pensioenspaarfonds",
                             SymbolForApi = "0P00000NFB.F",
-                            UpdatedOn = new DateTime(2022, 4, 29, 10, 23, 23, 177, DateTimeKind.Local).AddTicks(467),
+                            UpdatedOn = new DateTime(2022, 4, 29, 10, 17, 6, 729, DateTimeKind.Local).AddTicks(927),
                             Value = 0m
                         },
                         new
@@ -142,7 +143,7 @@ namespace PortfolioTracker.Server.Migrations
                             ISN = "Groepsverzekering IS",
                             Name = "Groepsverzekering IS",
                             SymbolForApi = "not applicable",
-                            UpdatedOn = new DateTime(2022, 4, 29, 10, 23, 23, 177, DateTimeKind.Local).AddTicks(470),
+                            UpdatedOn = new DateTime(2022, 4, 29, 10, 17, 6, 729, DateTimeKind.Local).AddTicks(930),
                             Value = 0m
                         });
                 });
@@ -159,28 +160,22 @@ namespace PortfolioTracker.Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("AveragePricePerShare")
-                        .HasPrecision(18, 8)
-                        .HasColumnType("decimal(18,8)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Profit")
-                        .HasPrecision(18, 8)
-                        .HasColumnType("decimal(18,8)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ProfitPercentage")
-                        .HasPrecision(18, 8)
-                        .HasColumnType("decimal(18,8)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotalInvestedValue")
-                        .HasPrecision(18, 8)
-                        .HasColumnType("decimal(18,8)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotalShares")
-                        .HasPrecision(18, 8)
-                        .HasColumnType("decimal(18,8)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotalValue")
-                        .HasPrecision(18, 8)
-                        .HasColumnType("decimal(18,8)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("datetime2");
@@ -204,20 +199,16 @@ namespace PortfolioTracker.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("Percentage")
-                        .HasPrecision(18, 8)
-                        .HasColumnType("decimal(18,8)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Profit")
-                        .HasPrecision(18, 8)
-                        .HasColumnType("decimal(18,8)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotalInvestedPortfolioValue")
-                        .HasPrecision(18, 8)
-                        .HasColumnType("decimal(18,8)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotalPortfolioValue")
-                        .HasPrecision(18, 8)
-                        .HasColumnType("decimal(18,8)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("PortfolioHistoryId");
 
@@ -233,8 +224,7 @@ namespace PortfolioTracker.Server.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PortfolioTransactionId"), 1L, 1);
 
                     b.Property<decimal>("AmountOfShares")
-                        .HasPrecision(18, 8)
-                        .HasColumnType("decimal(18,8)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("AssetId")
                         .HasColumnType("int");
@@ -252,20 +242,19 @@ namespace PortfolioTracker.Server.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("PricePerShare")
-                        .HasPrecision(18, 8)
-                        .HasColumnType("decimal(18,8)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TaxesCosts")
-                        .HasPrecision(18, 8)
-                        .HasColumnType("decimal(18,8)");
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<double>("Test")
+                        .HasColumnType("float");
 
                     b.Property<decimal>("TotalCosts")
-                        .HasPrecision(18, 8)
-                        .HasColumnType("decimal(18,8)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TransactionCosts")
-                        .HasPrecision(18, 8)
-                        .HasColumnType("decimal(18,8)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("TransactionType")
                         .HasColumnType("int");

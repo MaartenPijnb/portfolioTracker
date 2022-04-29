@@ -18,7 +18,6 @@ namespace PortfolioTracker.Model
         public int AssetId{ get; set; }
         public Asset Asset{ get; set; }        
         public BrokerType BrokerType{ get; set; }
-
     }
 
     public enum TransactionType

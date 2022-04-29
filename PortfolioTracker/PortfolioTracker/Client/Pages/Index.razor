@@ -98,7 +98,7 @@ else
 
         <RadzenDataGridColumn MinWidth="100px" Width="10%" TItem="Portfolio" Title="Profit">
             <Template Context="data">
-                @data.ProfitPercentage %
+               @decimal.Round(data.ProfitPercentage,2)  %
             </Template>
         </RadzenDataGridColumn>
 
@@ -146,7 +146,7 @@ else
 
         <RadzenDataGridColumn MinWidth="100px" Width="10%" TItem="Portfolio" Title="Profit">
             <Template Context="data">
-                @data.ProfitPercentage %
+               @decimal.Round(data.ProfitPercentage,2)  %
             </Template>
         </RadzenDataGridColumn>
 

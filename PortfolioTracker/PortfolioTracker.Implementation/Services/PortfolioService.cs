@@ -52,10 +52,9 @@ namespace PortfolioTracker.Implementation.Services
                         portfolio.TotalValue = portfolio.TotalInvestedValue;
                     }
                 }
+                var divider = portfolio.TotalShares == 0 ? 1: portfolio.TotalShares;
+                portfolio.AveragePricePerShare = portfolio.TotalInvestedValue / divider;
 
-                //average klopt niet, moet weighted zijn....
-                portfolio.AveragePricePerShare = item.Where(x => x.TransactionType != TransactionType.SELL).Average(x => x.PricePerShare);
-               
                 portfolio.AssetID = item.Key;
                 portfolio.ProfitPercentage = (portfolio.TotalValue - portfolio.TotalInvestedValue) / portfolio.TotalInvestedValue * 100;
                 portfolio.Profit = portfolio.TotalValue - portfolio.TotalInvestedValue;
