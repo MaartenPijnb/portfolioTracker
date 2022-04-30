@@ -5,7 +5,7 @@
     "version": "1.0"
   },
   "paths": {
-    "/FileUpload": {
+    "/FileUpload/UploadDegiro": {
       "post": {
         "tags": [
           "FileUpload"
@@ -35,10 +35,100 @@
             "description": "Success"
           }
         }
-      },
+      }
+    },
+    "/FileUpload/UploadBitvavo": {
+      "post": {
+        "tags": [
+          "FileUpload"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/FileUpload/UploadCryptoCom": {
+      "post": {
+        "tags": [
+          "FileUpload"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/FileUpload": {
       "get": {
         "tags": [
           "FileUpload"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/ImportHardcodedCryptoComExchange": {
+      "post": {
+        "tags": [
+          "Manual"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/ImportHardcodedCryptoComHotBit": {
+      "post": {
+        "tags": [
+          "Manual"
         ],
         "responses": {
           "200": {
@@ -85,6 +175,30 @@
               "format": "double"
             }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/CreatePensioenSpaarTransactionAutomaticaly": {
+      "post": {
+        "tags": [
+          "PensioenSpaar"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/CreateGroepsVerzekeringTransactionAutomaticaly": {
+      "post": {
+        "tags": [
+          "PensioenSpaar"
         ],
         "responses": {
           "200": {

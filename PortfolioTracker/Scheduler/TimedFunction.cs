@@ -22,12 +22,9 @@ namespace PortfolioTracker.Scheduler
         [FunctionName("CreatePensioenSpaarAndGroepsVerzekeringTransaction")]
         public async Task RunAndCreateTransactions([TimerTrigger("0 12 28 * *")] TimerInfo myTimer, ILogger log)
         {
-            //TODO FIX
-
-            //log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
-
-            //var client = new PortfolioTrackerClient("https://portfoliotrackerpaijnzzz.azurewebsites.net/", new HttpClient());
-            //await client.CreatePortfolioHistoryAsync(); 
+            var client = new PortfolioTrackerClient("https://portfoliotrackerpaijnzzz.azurewebsites.net/", new HttpClient());
+            await client.CreatePensioenSpaarTransactionAutomaticalyAsync();
+            await client.CreateGroepsVerzekeringTransactionAutomaticalyAsync();
         }
     }
 }
