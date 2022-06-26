@@ -41,6 +41,14 @@ namespace PortfolioTracker.Server.Controllers
             return _dbContext.PortfolioHistory.Where(x=>x.Date >=filterDate);
         }
 
+        [HttpGet]
+        [Route("AccountBalance")]
+        public IEnumerable<AccountBalance> GetAccountBalance(DateTime filterDate)
+        {
+            return _dbContext.AccountBalance.Where(x => x.CreatedOn >= filterDate);
+        }
+
+
         [HttpPost]
         [Route("UpdateAssets")]
         public async Task<IActionResult> UpdateAssets()
@@ -94,7 +102,7 @@ namespace PortfolioTracker.Server.Controllers
         {
             var transactionDate = _dbContext.Transactions.OrderBy(x => x.CreatedOn).First().CreatedOn;
             var transactions = _dbContext.Transactions.ToList();
-
+            var accountbalances = _dbContext.AccountBalance.ToList();
 
             //ONLY ETFS SUPPORTED ATM and crypto
             var allSupportedAssets = await _dbContext.Assets.Where(x => x.AssetType == AssetType.Etf || x.AssetId == 3 || x.AssetId ==262|| x.AssetType == AssetType.Crypto).ToListAsync();
@@ -125,7 +133,10 @@ namespace PortfolioTracker.Server.Controllers
             while (transactionDate < DateTime.Now)
             {
                 var allTransactionUntilDate = transactions.Where(x => x.CreatedOn <= transactionDate).ToList();
-                var totalInvestedForDate = allTransactionUntilDate.Where(x=>x.TransactionType!=TransactionType.SELL).Sum(x => x.TotalCosts) - allTransactionUntilDate.Where(x => x.TransactionType == TransactionType.SELL).Sum(x => x.TotalCosts);
+                var allAccountbalancesTillDate = accountbalances.Where(x => x.CreatedOn <= transactionDate).ToList();
+                var totalInvestedForDate = allTransactionUntilDate.Where(x => x.TransactionType != TransactionType.SELL).Sum(x => x.TotalCosts) - allTransactionUntilDate.Where(x => x.TransactionType == TransactionType.SELL).Sum(x => x.TotalCosts);
+
+                //var totalInvestedForDate = allAccountbalancesTillDate.Where(x => x.DepositType == DepositType.DEPOSIT).Sum(x => x.Value) - allAccountbalancesTillDate.Where(x => x.DepositType == DepositType.WITHDRAW).Sum(x => x.Value);
 
                 double totalActualOfAllAssetsValue = 0;
 

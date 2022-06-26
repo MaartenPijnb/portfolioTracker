@@ -83,7 +83,19 @@ namespace PortfolioTracker.Degiro.Runner.Controller
 
                     _dbContext.Transactions.Add(transaction);
                     }
-                    _dbContext.SaveChanges();            
+
+                foreach (var record in records.Where(r => r.Description.Contains("flatex Deposit") || r.Description.Contains("Sofort Deposit")))
+                {
+                    var accountBalance = new AccountBalance
+                    {
+                        BrokerType = BrokerType.DEGIRO,
+                        CreatedOn = record.CreatedOnDate,
+                        DepositType = DepositType.DEPOSIT,
+                        Value = record.TotalPrice.Value
+                    };
+                    _dbContext.AccountBalance.Add(accountBalance);
+                }
+                _dbContext.SaveChanges();            
             }
         }
     }

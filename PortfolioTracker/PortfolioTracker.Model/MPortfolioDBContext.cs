@@ -14,6 +14,7 @@ namespace PortfolioTracker.Model
         public DbSet<API> APIs { get; set; }
         public DbSet<PortfolioHistory> PortfolioHistory { get; set; }
         public DbSet<Portfolio> Portfolio { get; set; }
+        public DbSet<AccountBalance> AccountBalance { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

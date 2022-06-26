@@ -68,10 +68,23 @@ using (var csv = new CsvReader(reader, csvConfiguration))
                     transaction.AmountOfShares =  decimal.Parse(assetInformation[0]);
                     transaction.PricePerShare = decimal.Parse(assetInformation[1]);
                 }
+              
             }
             transaction.TotalCosts = transaction.AmountOfShares * transaction.PricePerShare + transaction.TaxesCosts + transaction.TransactionCosts;
 
             dbConext.Transactions.Add(transaction);
+        }
+
+        foreach (var record in records.Where(r => r.Description.Contains("flatex Deposit") ||r.Description.Contains("Sofort Deposit")))
+        {
+            var accountBalance = new AccountBalance
+            {
+                BrokerType = BrokerType.DEGIRO,
+                CreatedOn = record.CreatedOnDate,
+                DepositType = DepositType.DEPOSIT,
+                Value = record.TotalPrice.Value
+            };
+            dbConext.AccountBalance.Add(accountBalance);
         }
         dbConext.SaveChanges();
     };
