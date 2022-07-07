@@ -33,9 +33,9 @@ namespace PortfolioTracker.Implementation.Services
                     portfolio = new Portfolio();
                 }
 
-                portfolio.TotalShares = item.Where(x=>x.TransactionType!= TransactionType.SELL).Sum(x => x.AmountOfShares) - item.Where(x => x.TransactionType == TransactionType.SELL).Sum(x => x.AmountOfShares);
-                
-                if(portfolio.TotalShares == 0)
+                portfolio.TotalShares = item.Where(x => x.TransactionType != TransactionType.SELL).Sum(x => x.AmountOfShares) - item.Where(x => x.TransactionType == TransactionType.SELL).Sum(x => x.AmountOfShares);
+
+                if (portfolio.TotalShares == 0)
                 {
                     portfolio.TotalInvestedValue = item.Where(x => x.TransactionType != TransactionType.SELL).Sum(x => x.TotalCosts);
                     portfolio.TotalValue = item.Where(x => x.TransactionType == TransactionType.SELL).Sum(x => x.TotalCosts);
@@ -52,11 +52,14 @@ namespace PortfolioTracker.Implementation.Services
                         portfolio.TotalValue = portfolio.TotalInvestedValue;
                     }
                 }
-                var divider = portfolio.TotalShares == 0 ? 1: portfolio.TotalShares;
+                var divider = portfolio.TotalShares == 0 ? 1 : portfolio.TotalShares;
                 portfolio.AveragePricePerShare = portfolio.TotalInvestedValue / divider;
 
                 portfolio.AssetID = item.Key;
-                portfolio.ProfitPercentage = (portfolio.TotalValue - portfolio.TotalInvestedValue) / portfolio.TotalInvestedValue * 100;
+                if (portfolio.TotalInvestedValue != 0) {
+                    portfolio.ProfitPercentage = (portfolio.TotalValue - portfolio.TotalInvestedValue) / portfolio.TotalInvestedValue * 100;
+                }
+
                 portfolio.Profit = portfolio.TotalValue - portfolio.TotalInvestedValue;
 
                 if (isUpdate)
@@ -69,6 +72,53 @@ namespace PortfolioTracker.Implementation.Services
                 }
             }
 
+            var degiroTotalSpend = _dbContext.AccountBalance.Where(x => x.DepositType == DepositType.DEPOSIT && x.BrokerType == BrokerType.DEGIRO).Sum(x => x.Value) - _dbContext.AccountBalance.Where(x => x.DepositType == DepositType.WITHDRAW && x.BrokerType == BrokerType.DEGIRO).Sum(x => x.Value);
+            var degiroTotalTransactions = transactions.Where(x => x.BrokerType == BrokerType.DEGIRO && x.TransactionType == TransactionType.BUY).Sum(x => x.TotalCosts) - transactions.Where(x => x.BrokerType == BrokerType.DEGIRO && x.TransactionType == TransactionType.SELL).Sum(x => x.TotalCosts);
+
+            var cashAsset = _dbContext.Assets.FirstOrDefault(x => x.AssetType == AssetType.Cash);
+
+
+            var newCashAsset = new Asset();
+            if (cashAsset == null)
+            {
+                newCashAsset = new Asset
+                {
+                    APIId = 2,
+                    AssetType = AssetType.Cash,
+                    ISN = "Cash",
+                    Name = "Cash",
+                    SymbolForApi = "Not Applicable",
+                    Value = 0
+                };
+                _dbContext.Assets.Add(newCashAsset);
+                await _dbContext.SaveChangesAsync();
+
+                
+            }
+
+            var cashPortfolio = _dbContext.Portfolio.FirstOrDefault(x => x.Asset.AssetType == AssetType.Cash);
+            if (cashPortfolio == null)
+            {
+                cashPortfolio = new Portfolio
+                {
+                    AveragePricePerShare = degiroTotalSpend - degiroTotalTransactions,
+                    TotalValue = degiroTotalSpend - degiroTotalTransactions,
+                    TotalInvestedValue = 0,
+                    Profit= degiroTotalSpend - degiroTotalTransactions,
+                    ProfitPercentage = 0,
+                    TotalShares =1,
+                    AssetID = cashAsset.AssetId
+                };
+                _dbContext.Portfolio.Add(cashPortfolio);
+            }
+            else
+            {
+                cashPortfolio.TotalValue = degiroTotalSpend - degiroTotalTransactions;                
+                cashPortfolio.AveragePricePerShare = degiroTotalSpend - degiroTotalTransactions;
+                cashPortfolio.Profit = degiroTotalSpend - degiroTotalTransactions;
+
+                _dbContext.Portfolio.Update(cashPortfolio);
+            }
             await _dbContext.SaveChangesAsync();
         }
     }

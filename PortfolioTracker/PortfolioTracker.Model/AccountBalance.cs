@@ -17,6 +17,6 @@ namespace PortfolioTracker.Model
 
     public enum DepositType
     {
-        DEPOSIT, WITHDRAW
+        DEPOSIT, WITHDRAW, WITHDRAWNTOCARD
     }
 }

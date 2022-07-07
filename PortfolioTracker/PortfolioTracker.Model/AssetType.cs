@@ -13,6 +13,7 @@ namespace PortfolioTracker.Model
         Aandelen,
         Crypto,
         Pensioen,
-        Groepsverzekering
+        Groepsverzekering,
+        Cash
     }
 }

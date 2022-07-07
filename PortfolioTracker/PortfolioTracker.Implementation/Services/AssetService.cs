@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using PortfolioTracker.Implementation.APIs;
 using PortfolioTracker.Implementation.Resolvers;
 using PortfolioTracker.Model;

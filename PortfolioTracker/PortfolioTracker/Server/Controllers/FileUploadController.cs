@@ -66,6 +66,18 @@ namespace PortfolioTracker.Server.Controllers
             return BadRequest();
         }
 
+        [HttpPost]
+        [Route(nameof(UploadCryptoComFiat))]
+        public async Task<IActionResult> UploadCryptoComFiat(IFormFile file)
+        {
+            if (file.Length > 0)
+            {
+                await _cryptoController.ImportCryptoComFiat(new StreamReader(file.OpenReadStream()));
+                return Ok();
+            }
+            return BadRequest();
+        }
+
         [HttpGet]
         public async Task<IActionResult> Get()
         {

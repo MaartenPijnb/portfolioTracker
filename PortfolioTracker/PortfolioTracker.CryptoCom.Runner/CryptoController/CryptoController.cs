@@ -105,7 +105,14 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                     portfolioRecord.TotalCosts = portfolioRecord.AmountOfShares * portfolioRecord.PricePerShare;
 
                     PortfolioTransactions.Add(portfolioRecord);
-
+                    var accountBalance = new AccountBalance
+                    {
+                        BrokerType = BrokerType.CRYPTOCOM,
+                        CreatedOn = cryptoRecordCryptoPurchase.Timestamp,
+                        DepositType = DepositType.DEPOSIT,
+                        Value = cryptoRecordCryptoPurchase.NativeAmount
+                    };
+                    _dbcontext.AccountBalance.Add(accountBalance);
                 }
 
                 decimal fiatWalletPurchasedTotal = 0;
@@ -200,6 +207,58 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
 
                 Console.WriteLine("crypto.com generated");
             }
+        }
+
+        public async Task ImportCryptoComFiat(StreamReader cryptocomStream)
+        {
+            using (var csv = new CsvReader(cryptocomStream, CultureInfo.InvariantCulture))
+            {
+                int TotalRecords = 0;
+                var cryptoRecords = csv.GetRecords<CryptoComData>().ToList();
+
+                foreach (var sepaDeposit in cryptoRecords.Where(x=>x.TransactionKind == TransactionKind.viban_deposit))
+                {
+                    var accountBalance = new AccountBalance
+                    {
+                        BrokerType = BrokerType.CRYPTOCOM,
+                        CreatedOn = sepaDeposit.Timestamp,
+                        DepositType = DepositType.DEPOSIT,
+                        Value = sepaDeposit.NativeAmount
+                    };
+                    _dbcontext.AccountBalance.Add(accountBalance);
+                }
+
+                foreach (var sepaDeposit in cryptoRecords.Where(x => x.TransactionKind == TransactionKind.viban_card_top_up))
+                {
+                    var accountBalance = new AccountBalance
+                    {
+                        BrokerType = BrokerType.CRYPTOCOM,
+                        CreatedOn = sepaDeposit.Timestamp,
+                        DepositType = DepositType.WITHDRAWNTOCARD,
+                        Value = sepaDeposit.NativeAmount * -1
+                    };
+                    _dbcontext.AccountBalance.Add(accountBalance);
+                }
+
+                foreach (var sepaDeposit in cryptoRecords.Where(x => x.TransactionKind == TransactionKind.viban_withdrawal))
+                {
+                    var accountBalance = new AccountBalance
+                    {
+                        BrokerType = BrokerType.CRYPTOCOM,
+                        CreatedOn = sepaDeposit.Timestamp,
+                        DepositType = DepositType.WITHDRAW,
+                        Value = sepaDeposit.NativeAmount
+                    };
+                    _dbcontext.AccountBalance.Add(accountBalance);
+                }
+
+                
+            }
+
+
+            await _dbcontext.SaveChangesAsync();
+
+
         }
 
         private async Task<int> GetOrCreateAsset(string currency)

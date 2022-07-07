@@ -153,19 +153,20 @@ namespace PortfolioTracker.Server.Controllers
                 TotalCosts=500
             });
 
-            //var donkAsset = new Asset
-            //{
-            //    APIId = 2,
-            //    ISN = "DONK",
-            //    SymbolForApi = "DONK-USD",
-            //    Name = "DONK",
-            //    AssetType = AssetType.Crypto,
-            //    Value = 0
-            //};
+            var donkAsset = new Asset
+            {
+                APIId = 2,
+                ISN = "DONK",
+                SymbolForApi = "DONK-USD",
+                Name = "DONK",
+                AssetType = AssetType.Crypto,
+                Value = 0
+            };
 
-            //await _dbContext.Assets.AddAsync(donkAsset);
-            //await _dbContext.SaveChangesAsync();
-            var donkAsset = assets.Single(x => x.ISN == "DONK");
+            await _dbContext.Assets.AddAsync(donkAsset);
+            await _dbContext.SaveChangesAsync();
+
+            //var donkAsset = assets.Single(x => x.ISN == "DONK");
 
             transactions.Add(new PortfolioTransaction
             {
@@ -193,17 +194,18 @@ namespace PortfolioTracker.Server.Controllers
                 TotalCosts = 397.70m
             });
 
-            //var sunnyAsset = new Asset { 
-            //    APIId=1,
-            //    SymbolForApi= "SUNNY-USD",
-            //    AssetType=AssetType.Crypto,
-            //    ISN="SUNNY",
-            //    Name="SUNNY",
-            //    Value=0
-            //};
-            //await _dbContext.Assets.AddAsync(sunnyAsset);
-            //await _dbContext.SaveChangesAsync();
-            var sunnyAsset = assets.Single(x => x.ISN == "SUNNY");
+            var sunnyAsset = new Asset
+            {
+                APIId = 1,
+                SymbolForApi = "SUNNY-USD",
+                AssetType = AssetType.Crypto,
+                ISN = "SUNNY",
+                Name = "SUNNY",
+                Value = 0
+            };
+            await _dbContext.Assets.AddAsync(sunnyAsset);
+            await _dbContext.SaveChangesAsync();
+            //var sunnyAsset = assets.Single(x => x.ISN == "SUNNY");
 
             transactions.Add(new PortfolioTransaction
             {

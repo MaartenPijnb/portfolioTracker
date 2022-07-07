@@ -157,6 +157,36 @@ namespace PortfolioTracker.Bitvavo.Runner.BitvavoController
                     }
                 }
 
+                foreach (var depositRecord in cryptoRecords.Where(x => x.Type == BitvavoType.deposit))
+                {
+                    if(depositRecord.Currency == "EUR")
+                    {
+                        var accountBalance = new AccountBalance
+                        {
+                            BrokerType = BrokerType.BITVAVO,
+                            CreatedOn = depositRecord.TimeStamp,
+                            DepositType = DepositType.DEPOSIT,
+                            Value = Convert.ToDecimal(depositRecord.Amount)
+                        };
+                        _dbcontext.AccountBalance.Add(accountBalance); 
+                    }
+                }
+
+                foreach (var depositRecord in cryptoRecords.Where(x => x.Type == BitvavoType.withdrawal))
+                {
+                    if (depositRecord.Currency == "EUR")
+                    {
+                        var accountBalance = new AccountBalance
+                        {
+                            BrokerType = BrokerType.BITVAVO,
+                            CreatedOn = depositRecord.TimeStamp,
+                            DepositType = DepositType.WITHDRAW,
+                            Value = Convert.ToDecimal(depositRecord.Amount)
+                        };
+                        _dbcontext.AccountBalance.Add(accountBalance);
+                    }
+                }
+
                 portfolioTransactionRecords = portfolioTransactionRecords.OrderBy(x => x.CreatedOn).ToList();
                 await _dbcontext.Transactions.AddRangeAsync(portfolioTransactionRecords);
                 await _dbcontext.SaveChangesAsync();

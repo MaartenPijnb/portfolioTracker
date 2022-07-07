@@ -68,6 +68,13 @@ namespace CryptoComTooling
         crypto_earn_program_withdrawn,
         dust_conversion_credited,
         dust_conversion_debited,
-        exchange_to_crypto_transfer
+        exchange_to_crypto_transfer,
+        viban_deposit,
+        viban_card_top_up,
+        viban_withdrawal,
+        crypto_viban,
+        admin_wallet_credited,
+        crypto_wallet_swap_credited,
+        crypto_wallet_swap_debited
     }
 }

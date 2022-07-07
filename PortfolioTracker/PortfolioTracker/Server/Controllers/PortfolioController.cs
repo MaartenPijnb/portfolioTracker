@@ -168,7 +168,10 @@ namespace PortfolioTracker.Server.Controllers
                 portfolioHistory.TotalInvestedPortfolioValue = totalInvestedForDate;
                 portfolioHistory.TotalPortfolioValue = Convert.ToDecimal(totalActualOfAllAssetsValue);
                 portfolioHistory.Profit = portfolioHistory.TotalPortfolioValue - portfolioHistory.TotalInvestedPortfolioValue;
-                portfolioHistory.Percentage = (portfolioHistory.TotalPortfolioValue - portfolioHistory.TotalInvestedPortfolioValue) / portfolioHistory.TotalInvestedPortfolioValue * 100;
+                if (portfolioHistory.TotalInvestedPortfolioValue != 0)
+                {
+                    portfolioHistory.Percentage = (portfolioHistory.TotalPortfolioValue - portfolioHistory.TotalInvestedPortfolioValue) / portfolioHistory.TotalInvestedPortfolioValue * 100;
+                }
 
                 await _dbContext.PortfolioHistory.AddAsync(portfolioHistory);
 
