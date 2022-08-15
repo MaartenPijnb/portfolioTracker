@@ -103,8 +103,8 @@ namespace PortfolioTracker.Implementation.Services
                 {
                     AveragePricePerShare = degiroTotalSpend - degiroTotalTransactions,
                     TotalValue = degiroTotalSpend - degiroTotalTransactions,
-                    TotalInvestedValue = 0,
-                    Profit= degiroTotalSpend - degiroTotalTransactions,
+                    TotalInvestedValue = degiroTotalSpend - degiroTotalTransactions,
+                    Profit= 0,
                     ProfitPercentage = 0,
                     TotalShares =1,
                     AssetID = cashAsset.AssetId
@@ -115,7 +115,9 @@ namespace PortfolioTracker.Implementation.Services
             {
                 cashPortfolio.TotalValue = degiroTotalSpend - degiroTotalTransactions;                
                 cashPortfolio.AveragePricePerShare = degiroTotalSpend - degiroTotalTransactions;
-                cashPortfolio.Profit = degiroTotalSpend - degiroTotalTransactions;
+                cashPortfolio.TotalInvestedValue = degiroTotalSpend - degiroTotalTransactions;
+
+                cashPortfolio.Profit = 0;
 
                 _dbContext.Portfolio.Update(cashPortfolio);
             }
