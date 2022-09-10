@@ -24,7 +24,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioTracker.Scheduler"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioTracker.Bitvavo.Runner", "PortfolioTracker.Bitvavo.Runner\PortfolioTracker.Bitvavo.Runner.csproj", "{0881320C-B871-4003-8835-2A86675C5462}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PortfolioTracker.CryptoCom.Runner", "PortfolioTracker.CryptoCom.Runner\PortfolioTracker.CryptoCom.Runner.csproj", "{69947C81-21BF-4CA7-B773-9C0CB1CF671E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioTracker.CryptoCom.Runner", "PortfolioTracker.CryptoCom.Runner\PortfolioTracker.CryptoCom.Runner.csproj", "{69947C81-21BF-4CA7-B773-9C0CB1CF671E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

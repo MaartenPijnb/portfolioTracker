@@ -1,0 +1,42 @@
+﻿@page "/assets"
+@using PortfolioTracker.Client.Components
+
+@inject HttpClient Http
+<h3>Assets
+
+    <RadzenButton class="margin-left-small" Click="() =>UpdateallAssets()" Text="Update all assets" ButtonStyle="ButtonStyle.Info" />
+
+</h3> 
+
+
+<RadzenDataGrid AllowColumnResize="true" AllowSorting="true" PageSize="20" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                Data="@assets" TItem="Asset">
+    <Columns>
+
+        <RadzenDataGridColumn MinWidth="300px" Width="50%" TItem="Asset" Property="Name" Title="Asset Naam" />
+        <RadzenDataGridColumn MinWidth="180px" Width="20%" TItem="Asset" Property="SymbolForApi" Title="Api Symbol" />
+        <RadzenDataGridColumn MinWidth="180px" Width="18%" TItem="Asset" Property="ISN" Title="ISN" />
+
+        <RadzenDataGridColumn MinWidth="150px" Width="12%" TItem="Asset" Title="Huidige waarde">
+            <Template Context="data">
+                <FormatCurrencyComponent CurrencyToDisplay=@data.Value />
+            </Template>
+        </RadzenDataGridColumn>
+        </Columns>
+</RadzenDataGrid>
+
+@code {
+    IEnumerable<Asset> assets = Enumerable.Empty<Asset>();
+    protected override async Task OnInitializedAsync()
+    {
+        assets = await Http.GetFromJsonAsync<List<Asset>>("api/Assets");
+
+    }
+    protected async Task UpdateallAssets(){
+        await Http.PostAsync("api/Assets/UpdateAllAssets", null);
+
+        // update assets
+        assets = await Http.GetFromJsonAsync<List<Asset>>("api/Assets");
+
+    }
+}
