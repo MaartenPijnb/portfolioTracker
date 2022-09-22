@@ -1,0 +1,25 @@
+﻿@page "/assets/{AssetId:int}"
+@using PortfolioTracker.Client.Components
+
+@inject HttpClient Http
+
+<h3>Assets
+
+</h3> 
+
+
+@Assets.Name
+
+
+@code {
+    [Parameter]
+    public int? AssetId { get; set; }
+
+    public Asset Assets { get; set; } = new Asset();
+    protected override async Task OnInitializedAsync()
+    {        
+        Assets = await Http.GetFromJsonAsync<Asset>($"api/Assets/{AssetId}");
+
+    }
+    
+}

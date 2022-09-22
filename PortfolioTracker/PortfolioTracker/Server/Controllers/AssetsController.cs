@@ -22,6 +22,10 @@ namespace PortfolioTracker.Server.Controllers
         [HttpGet]
         public async Task<List<Asset>> GetAll() => await _dbContext.Assets.ToListAsync();
 
+        [HttpGet]
+        [Route("{assetId}")]
+        public async Task<Asset> Get(int assetId) => await _dbContext?.Assets?.SingleOrDefaultAsync(asset => asset.AssetId == assetId);
+
         [Route("UpdateAllAssets")]
         [HttpPost]
         public async Task UpdateAllAssets()
