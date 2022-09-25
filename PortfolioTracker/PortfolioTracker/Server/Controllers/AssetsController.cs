@@ -26,6 +26,17 @@ namespace PortfolioTracker.Server.Controllers
         [Route("{assetId}")]
         public async Task<Asset> Get(int assetId) => await _dbContext?.Assets?.SingleOrDefaultAsync(asset => asset.AssetId == assetId);
 
+        [HttpPost]
+        public async Task UpdateAsset([FromBody] Asset asset)
+        {
+            var assetFromDb = await _dbContext?.Assets?.SingleOrDefaultAsync(bla => bla.AssetId == asset.AssetId);
+
+            assetFromDb.Name = asset.Name;
+            assetFromDb.ISN = asset.ISN;
+            assetFromDb.SymbolForApi = asset.SymbolForApi;
+            await _dbContext.SaveChangesAsync();
+        }
+
         [Route("UpdateAllAssets")]
         [HttpPost]
         public async Task UpdateAllAssets()

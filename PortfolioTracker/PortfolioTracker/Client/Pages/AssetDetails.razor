@@ -1,25 +1,60 @@
 ﻿@page "/assets/{AssetId:int}"
 @using PortfolioTracker.Client.Components
+@using System.Text.Json
+@using System.Text
 
 @inject HttpClient Http
 
-<h3>Assets
+<h3>
+    @Asset.Name
+</h3>
 
-</h3> 
 
-
-@Assets.Name
-
+<EditForm model=Asset OnValidSubmit="CreateOrUpdateAsset">
+    <div class="form-group row">
+        <label for="assetName" class="col-sm-2 col-form-label">Name</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="assetName" placeholder="Name of the asset" @bind-value=Asset.Name>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="assetSymbolApi" class="col-sm-2 col-form-label">Yahoo Finance Symbol</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="assetSymbolApi" placeholder="Symbol for Yahoo Finance... TSLA, btc-eur, ..." @bind-value=Asset.SymbolForApi>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="assetSymbolISN" class="col-sm-2 col-form-label">ISN</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="assetSymbolISN" placeholder="ISN" @bind-value=Asset.ISN>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-10">
+            <button type="submit" class="btn btn-primary">Update Asset</button>
+        </div>
+    </div>
+</EditForm>
 
 @code {
     [Parameter]
     public int? AssetId { get; set; }
 
-    public Asset Assets { get; set; } = new Asset();
+    public Asset Asset { get; set; } = new Asset();
     protected override async Task OnInitializedAsync()
-    {        
-        Assets = await Http.GetFromJsonAsync<Asset>($"api/Assets/{AssetId}");
+    {
+        Asset = await Http.GetFromJsonAsync<Asset>($"api/Assets/{AssetId}");
 
     }
-    
+
+    protected async Task CreateOrUpdateAsset()
+    {        
+        var postResult = await Http.PostAsJsonAsync<Asset>("api/Assets", Asset);
+        var postContent = await postResult.Content.ReadAsStringAsync();
+        if (!postResult.IsSuccessStatusCode)
+        {
+            throw new ApplicationException(postContent);
+        }
+    }
+
 }

@@ -2,6 +2,9 @@
 @using PortfolioTracker.Client.Components
 
 @inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+
 <h3>Assets
 
     <RadzenButton class="margin-left-small" Click="() =>UpdateallAssets()" Text="Update all assets" ButtonStyle="ButtonStyle.Info" />
@@ -13,7 +16,11 @@
                 Data="@assets" TItem="Asset">
     <Columns>
 
-        <RadzenDataGridColumn MinWidth="300px" Width="50%" TItem="Asset" Property="Name" Title="Asset Naam" />
+        <RadzenDataGridColumn MinWidth="300px" Width="50%" TItem="Asset"  Title="Asset Naam" >
+            <Template Context="data">
+            <a href="assets/@data.AssetId" >@data.Name</a>
+            </Template>
+        </RadzenDataGridColumn>
         <RadzenDataGridColumn MinWidth="180px" Width="20%" TItem="Asset" Property="SymbolForApi" Title="Api Symbol" />
         <RadzenDataGridColumn MinWidth="180px" Width="18%" TItem="Asset" Property="ISN" Title="ISN" />
 
@@ -38,5 +45,10 @@
         // update assets
         assets = await Http.GetFromJsonAsync<List<Asset>>("api/Assets");
 
+    }
+
+    private void NavigateToCounterComponent()
+    {
+        NavigationManager.NavigateTo("assets/2");
     }
 }
