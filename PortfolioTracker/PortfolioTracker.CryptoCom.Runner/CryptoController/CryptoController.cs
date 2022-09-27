@@ -21,7 +21,7 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
         }
 
       
-        public async Task ImportCryptoCom(StreamReader cryptocomStream)
+        public async Task ImportCryptoCom(StreamReader cryptocomStream, long userId)
         {
             using (var csv = new CsvReader(cryptocomStream, CultureInfo.InvariantCulture))
             {
@@ -40,7 +40,8 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                         CreatedOn = cryptoRecordEarn.Timestamp,
                         AmountOfShares = cryptoRecordEarn.Amount,
                         TotalCosts = 0,
-                        AssetId = assetId
+                        AssetId = assetId,
+                        UserID= userId
                     });
                 }
 
@@ -63,7 +64,8 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                         CreatedOn = cryptoRecordCryptoPurchase.Timestamp,
                         AmountOfShares = cryptoRecordCryptoPurchase.ToAmount.Value,
                         PricePerShare = cryptoRecordCryptoPurchase.NativeAmount / cryptoRecordCryptoPurchase.ToAmount.Value,                        
-                        AssetId = assetId
+                        AssetId = assetId,
+                        UserID=userId
                     };
                     portfoliotransactionBuy.TotalCosts = portfoliotransactionBuy.AmountOfShares * portfoliotransactionBuy.PricePerShare;
 
@@ -77,7 +79,8 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                         CreatedOn = cryptoRecordCryptoPurchase.Timestamp,
                         AmountOfShares = cryptoRecordCryptoPurchase.Amount * -1,
                         PricePerShare = cryptoRecordCryptoPurchase.NativeAmount / cryptoRecordCryptoPurchase.Amount * -1,
-                        AssetId = assetId
+                        AssetId = assetId,
+                        UserID=userId
                     };
                     portfoliotransactionSell.TotalCosts = portfoliotransactionBuy.AmountOfShares * portfoliotransactionBuy.PricePerShare;
 
@@ -100,7 +103,8 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                         CreatedOn = cryptoRecordCryptoPurchase.Timestamp,
                         AmountOfShares = cryptoRecordCryptoPurchase.Amount,
                         PricePerShare = cryptoRecordCryptoPurchase.NativeAmount / cryptoRecordCryptoPurchase.Amount,
-                        AssetId = assetId
+                        AssetId = assetId,
+                        UserID=userId
                     };
                     portfolioRecord.TotalCosts = portfolioRecord.AmountOfShares * portfolioRecord.PricePerShare;
 
@@ -110,7 +114,8 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                         BrokerType = BrokerType.CRYPTOCOM,
                         CreatedOn = cryptoRecordCryptoPurchase.Timestamp,
                         DepositType = DepositType.DEPOSIT,
-                        Value = cryptoRecordCryptoPurchase.NativeAmount
+                        Value = cryptoRecordCryptoPurchase.NativeAmount,
+                        UserID=userId
                     };
                     _dbcontext.AccountBalance.Add(accountBalance);
                 }
@@ -129,7 +134,8 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                         CreatedOn = cryptoRecordCryptoPurchaseFiatWallet.Timestamp,
                         AmountOfShares = cryptoRecordCryptoPurchaseFiatWallet.ToAmount.Value,
                         PricePerShare = cryptoRecordCryptoPurchaseFiatWallet.NativeAmount / cryptoRecordCryptoPurchaseFiatWallet.ToAmount.Value,
-                        AssetId = assetId
+                        AssetId = assetId,
+                        UserID=userId
                     };
                     transaction.TotalCosts = transaction.AmountOfShares * transaction.PricePerShare;
 
@@ -154,7 +160,8 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                         CreatedOn = cryptoRecordCryptoPurchaseFiatWallet.Timestamp,
                         AmountOfShares = cryptoRecordCryptoPurchaseFiatWallet.Amount * -1,
                         PricePerShare = cryptoRecordCryptoPurchaseFiatWallet.NativeAmount / cryptoRecordCryptoPurchaseFiatWallet.Amount * -1,
-                        AssetId = assetId
+                        AssetId = assetId,
+                        UserID=userId
                     };
                     transaction.TotalCosts = transaction.AmountOfShares * transaction.PricePerShare;
 
@@ -175,7 +182,8 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                         AmountOfShares = cryptoRecordCardCashBack.Amount,
                         PricePerShare = 0,
                         TotalCosts = 0,
-                        AssetId = assetId
+                        AssetId = assetId,
+                        UserID=userId
                     });
                 }
 
@@ -193,7 +201,8 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                         AmountOfShares = cryptoRecordReferal.Amount,
                         PricePerShare = 0,
                         TotalCosts = 0,
-                        AssetId = assetId
+                        AssetId = assetId,
+                        UserID=userId
                     });
                 }
 
@@ -209,7 +218,7 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
             }
         }
 
-        public async Task ImportCryptoComFiat(StreamReader cryptocomStream)
+        public async Task ImportCryptoComFiat(StreamReader cryptocomStream, long userId)
         {
             using (var csv = new CsvReader(cryptocomStream, CultureInfo.InvariantCulture))
             {
@@ -223,7 +232,8 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                         BrokerType = BrokerType.CRYPTOCOM,
                         CreatedOn = sepaDeposit.Timestamp,
                         DepositType = DepositType.DEPOSIT,
-                        Value = sepaDeposit.NativeAmount
+                        Value = sepaDeposit.NativeAmount,
+                        UserID=userId
                     };
                     _dbcontext.AccountBalance.Add(accountBalance);
                 }
@@ -235,7 +245,8 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                         BrokerType = BrokerType.CRYPTOCOM,
                         CreatedOn = sepaDeposit.Timestamp,
                         DepositType = DepositType.WITHDRAWNTOCARD,
-                        Value = sepaDeposit.NativeAmount * -1
+                        Value = sepaDeposit.NativeAmount * -1,
+                        UserID=userId
                     };
                     _dbcontext.AccountBalance.Add(accountBalance);
                 }
@@ -247,7 +258,8 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
                         BrokerType = BrokerType.CRYPTOCOM,
                         CreatedOn = sepaDeposit.Timestamp,
                         DepositType = DepositType.WITHDRAW,
-                        Value = sepaDeposit.NativeAmount
+                        Value = sepaDeposit.NativeAmount,
+                        UserID=userId
                     };
                     _dbcontext.AccountBalance.Add(accountBalance);
                 }

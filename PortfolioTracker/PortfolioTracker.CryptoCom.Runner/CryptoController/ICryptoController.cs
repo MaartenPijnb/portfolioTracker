@@ -8,7 +8,7 @@ namespace PortfolioTracker.CryptoCom.Runner.CryptoController
 {
     public interface ICryptoController
     {
-        Task ImportCryptoCom(StreamReader cryptocomStream);
-        Task ImportCryptoComFiat(StreamReader cryptocomStream);
+        Task ImportCryptoCom(StreamReader cryptocomStream, long userId);
+        Task ImportCryptoComFiat(StreamReader cryptocomStream, long userId);
     }
 }

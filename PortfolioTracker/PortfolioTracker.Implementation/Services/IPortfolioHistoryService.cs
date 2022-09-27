@@ -8,6 +8,6 @@ namespace PortfolioTracker.Implementation.Services
 {
     public interface IPortfolioHistoryService
     {
-        Task CreatePortfolioHistory();
+        Task CreatePortfolioHistory(long userId);
     }
 }

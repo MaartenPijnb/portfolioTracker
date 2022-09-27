@@ -14,6 +14,7 @@ namespace PortfolioTracker.Model
         public decimal Percentage{ get; set; }
         public decimal Profit { get; set; } 
         public DateTime Date { get; set; } = DateTime.Now;
+        public long UserID { get; set; }
 
     }
 }

@@ -15,13 +15,14 @@ namespace PortfolioTracker.Implementation.Services
         {
             _dbContext = dbContext;
         }
-        public async Task CreatePortfolioHistory()
+        public async Task CreatePortfolioHistory(long userId)
         {
-            var portfolios = _dbContext.Portfolio.ToList();
+            var portfolios = _dbContext.Portfolio.Where(x=>x.UserID==userId).ToList();
             var portfolioHistory = new PortfolioHistory
             {
                 TotalInvestedPortfolioValue = portfolios.Where(x=>x.TotalShares!=0).Sum(x => x.TotalInvestedValue),
-                TotalPortfolioValue = portfolios.Where(x => x.TotalShares != 0).Sum(x => x.TotalValue)
+                TotalPortfolioValue = portfolios.Where(x => x.TotalShares != 0).Sum(x => x.TotalValue),
+                UserID=userId
             };
             portfolioHistory.Profit = portfolioHistory.TotalPortfolioValue - portfolioHistory.TotalInvestedPortfolioValue;
             portfolioHistory.Percentage = (portfolioHistory.TotalPortfolioValue - portfolioHistory.TotalInvestedPortfolioValue) / portfolioHistory.TotalInvestedPortfolioValue * 100;

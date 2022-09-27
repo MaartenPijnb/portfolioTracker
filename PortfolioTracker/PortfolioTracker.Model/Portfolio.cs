@@ -18,6 +18,7 @@ namespace PortfolioTracker.Model
         public decimal ProfitPercentage { get; set; }
         public decimal Profit { get; set; }
         public DateTime UpdatedOn { get; set; } = DateTime.Now;
+        public long UserID { get; set; }
 
     }
 }

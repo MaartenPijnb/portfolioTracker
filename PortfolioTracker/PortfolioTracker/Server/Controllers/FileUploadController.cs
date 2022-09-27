@@ -31,11 +31,11 @@ namespace PortfolioTracker.Server.Controllers
 
         [HttpPost]
         [Route(nameof(UploadDegiro))]
-        public async Task<IActionResult> UploadDegiro(IFormFile file)
+        public async Task<IActionResult> UploadDegiro(IFormFile file, long userId)
         {            
             if (file.Length > 0)
             {
-                await _degiroController.ImportDegiro(new StreamReader(file.OpenReadStream()));
+                await _degiroController.ImportDegiro(new StreamReader(file.OpenReadStream()), userId);
                 return Ok();
             }
             return BadRequest();
@@ -43,11 +43,11 @@ namespace PortfolioTracker.Server.Controllers
 
         [HttpPost]
         [Route(nameof(UploadBitvavo))]
-        public async Task<IActionResult> UploadBitvavo(IFormFile file)
+        public async Task<IActionResult> UploadBitvavo(IFormFile file, long userId)
         {
             if (file.Length > 0)
             {
-                await _bitvavoController.ImportBitvavo(new StreamReader(file.OpenReadStream()));
+                await _bitvavoController.ImportBitvavo(new StreamReader(file.OpenReadStream()), userId);
                 return Ok();
             }
             return BadRequest();
@@ -56,11 +56,11 @@ namespace PortfolioTracker.Server.Controllers
 
         [HttpPost]
         [Route(nameof(UploadCryptoCom))]
-        public async Task<IActionResult> UploadCryptoCom(IFormFile file)
+        public async Task<IActionResult> UploadCryptoCom(IFormFile file, long userId)
         {
             if (file.Length > 0)
             {
-                await _cryptoController.ImportCryptoCom(new StreamReader(file.OpenReadStream()));
+                await _cryptoController.ImportCryptoCom(new StreamReader(file.OpenReadStream()), userId);
                 return Ok();
             }
             return BadRequest();
@@ -68,23 +68,16 @@ namespace PortfolioTracker.Server.Controllers
 
         [HttpPost]
         [Route(nameof(UploadCryptoComFiat))]
-        public async Task<IActionResult> UploadCryptoComFiat(IFormFile file)
+        public async Task<IActionResult> UploadCryptoComFiat(IFormFile file, long userId)
         {
             if (file.Length > 0)
             {
-                await _cryptoController.ImportCryptoComFiat(new StreamReader(file.OpenReadStream()));
+                await _cryptoController.ImportCryptoComFiat(new StreamReader(file.OpenReadStream()), userId );
                 return Ok();
             }
             return BadRequest();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            await _assetService.UpdateAssets();
-            await _portfolioService.UpdatePortfolio();
-            await _portfolioHistoryService.CreatePortfolioHistory();
-            return Ok();
-        }
+    
     }
 }

@@ -8,6 +8,6 @@ namespace PortfolioTracker.Bitvavo.Runner.BitvavoController
 {
     public interface IBitvavoController
     {
-        Task ImportBitvavo(StreamReader bitvavoCsvStream);
+        Task ImportBitvavo(StreamReader bitvavoCsvStream, long userId);
     }
 }

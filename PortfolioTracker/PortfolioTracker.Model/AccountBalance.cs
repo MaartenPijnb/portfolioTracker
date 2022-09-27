@@ -13,6 +13,8 @@ namespace PortfolioTracker.Model
         public decimal Value { get; set; }
         public DateTime CreatedOn { get; set; }
         public DepositType DepositType { get; set; }
+        public long UserID { get; set; }
+
     }
 
     public enum DepositType

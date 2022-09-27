@@ -8,6 +8,6 @@ namespace PortfolioTracker.Degiro.Runner.Controller
 {
     public interface IDegiroController
     {
-        Task ImportDegiro(StreamReader degiroCsvStream);
+        Task ImportDegiro(StreamReader degiroCsvStream, long userId);
     }
 }

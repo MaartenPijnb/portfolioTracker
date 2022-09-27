@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@page "/{UserId:int}"
 
 @using Microsoft.EntityFrameworkCore
 @using System.Globalization
@@ -109,7 +109,13 @@ else
                 Data="@portfoliosUnRealised" TItem="Portfolio">
     <Columns>
 
-        <RadzenDataGridColumn MinWidth="300px" Width="50%" TItem="Portfolio" Property="Asset.Name" Title="Asset" />
+        <RadzenDataGridColumn MinWidth="300px" Width="34%" TItem="Portfolio" Property="Asset.Name" Title="Asset" />
+        <RadzenDataGridColumn MinWidth="100px" Width="8%" TItem="Portfolio" Property="TotalShares" Title="Total Shares" />
+        <RadzenDataGridColumn MinWidth="100px" Width="8%" TItem="Portfolio" Title="Average Price">
+            <Template Context="data">
+                <FormatCurrencyComponent CurrencyToDisplay=@data.AveragePricePerShare />
+            </Template>
+        </RadzenDataGridColumn>
         <RadzenDataGridColumn MinWidth="150px" Width="12%" TItem="Portfolio" Title="Huidige waarde">
             <Template Context="data">
                 <FormatCurrencyComponent CurrencyToDisplay=@data.TotalValue />
@@ -235,6 +241,9 @@ else
     </div>
 </div>
 @code {
+    [Parameter]
+    public int? UserId { get; set; }
+
     IEnumerable<Portfolio> portfoliosRealised;
     IEnumerable<Portfolio> portfoliosUnRealised;
     IEnumerable<PortfolioHistory> portfoliohistories;
@@ -245,15 +254,15 @@ else
     string test;
     protected override async Task OnInitializedAsync()
     {
-        var tempPortfolios = await Http.GetFromJsonAsync<IEnumerable<Portfolio>>("Portfolio");
+        var tempPortfolios = await Http.GetFromJsonAsync<IEnumerable<Portfolio>>($"Portfolio/{UserId}");
         portfoliosUnRealised = tempPortfolios.Where(x => x.TotalShares != 0);
         portfoliosRealised = tempPortfolios.Where(x => x.TotalShares == 0);
 
         totalValue = portfoliosUnRealised.Sum(x => x.TotalValue);
         totalRealisedValue = portfoliosRealised.Sum(x => x.TotalValue);
 
-        totalTransactionCosts = await Http.GetFromJsonAsync<decimal>("Transaction/TotalTransactionCosts");
-        totalTaxesCosts = await Http.GetFromJsonAsync<decimal>("Transaction/TotalTaxes");
+        totalTransactionCosts = await Http.GetFromJsonAsync<decimal>($"Transaction/TotalTransactionCosts/{UserId}");
+        totalTaxesCosts = await Http.GetFromJsonAsync<decimal>($"Transaction/TotalTaxes/{UserId}");
         realisedProfit = portfoliosRealised.Sum(x => x.Profit);
         profit = portfoliosUnRealised.Sum(x => x.Profit) + realisedProfit;
 
@@ -330,7 +339,7 @@ else
 
     async Task FilterPortfolioHistory(DateTime filterDate)
     {
-        portfoliohistories = await Http.GetFromJsonAsync<IEnumerable<PortfolioHistory>>("Portfolio/PortfolioHistory?filterDate=" + filterDate.ToString("yyyy-MM-dd"));
+        portfoliohistories = await Http.GetFromJsonAsync<IEnumerable<PortfolioHistory>>("Portfolio/PortfolioHistory?filterDate=" + filterDate.ToString("yyyy-MM-dd") + $"&userId={UserId}");
         totalInvestedValue = portfoliohistories.Where(x => x.Date >= filterDate).Select(x => new DataItem
             {
                 Date = x.Date,

@@ -19,7 +19,7 @@ namespace PortfolioTracker.Bitvavo.Runner.BitvavoController
             _dbcontext = dbContext;
         }
 
-        public async Task ImportBitvavo(StreamReader bitvavoCsvStream)
+        public async Task ImportBitvavo(StreamReader bitvavoCsvStream, long userId)
         {
             var allApis = _dbcontext.APIs.ToList();
             using (var csv = new CsvReader(bitvavoCsvStream, CultureInfo.InvariantCulture))
@@ -90,7 +90,7 @@ namespace PortfolioTracker.Bitvavo.Runner.BitvavoController
                             Name = cryptoCurrencySymbol,
                             SymbolForApi = cryptoCurrencySymbol + "-EUR",
                             UpdatedOn = DateTime.Now,
-                            AssetType = AssetType.Crypto,
+                            AssetType = AssetType.Crypto,                            
                         };
                         await _dbcontext.AddAsync(newAsset);
                         await _dbcontext.SaveChangesAsync();
@@ -107,7 +107,8 @@ namespace PortfolioTracker.Bitvavo.Runner.BitvavoController
                         TransactionCosts = Convert.ToDecimal(totalEur) * 0.0025m,
                         TotalCosts = Convert.ToDecimal(totalEur),
                         PricePerShare = Convert.ToDecimal(totalEur) / Convert.ToDecimal(totalCryptoCurrency),
-                        AssetId = assetId
+                        AssetId = assetId,
+                        UserID=userId
                     });
                 }
                 var coinnamesAndStakedValue = new Dictionary<string, double>();
@@ -166,7 +167,8 @@ namespace PortfolioTracker.Bitvavo.Runner.BitvavoController
                             BrokerType = BrokerType.BITVAVO,
                             CreatedOn = depositRecord.TimeStamp,
                             DepositType = DepositType.DEPOSIT,
-                            Value = Convert.ToDecimal(depositRecord.Amount)
+                            Value = Convert.ToDecimal(depositRecord.Amount),
+                            UserID=userId
                         };
                         _dbcontext.AccountBalance.Add(accountBalance); 
                     }
@@ -181,7 +183,8 @@ namespace PortfolioTracker.Bitvavo.Runner.BitvavoController
                             BrokerType = BrokerType.BITVAVO,
                             CreatedOn = depositRecord.TimeStamp,
                             DepositType = DepositType.WITHDRAW,
-                            Value = Convert.ToDecimal(depositRecord.Amount)
+                            Value = Convert.ToDecimal(depositRecord.Amount),
+                            UserID=userId
                         };
                         _dbcontext.AccountBalance.Add(accountBalance);
                     }

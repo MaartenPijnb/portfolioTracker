@@ -8,6 +8,6 @@ namespace PortfolioTracker.Implementation.Services
 {
     public interface IPortfolioService
     {
-        Task UpdatePortfolio();
+        Task UpdatePortfolio(long userId);
     }
 }

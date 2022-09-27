@@ -29,18 +29,19 @@ namespace PortfolioTracker.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Portfolio>> Get()
+        [Route("{UserId}")]
+        public async Task<IEnumerable<Portfolio>> Get(int UserId)
         {
-            var portfolios = await _dbContext.Portfolio.Include(x => x.Asset).OrderByDescending(x=>x.TotalValue).ToListAsync();
+            var portfolios = await _dbContext.Portfolio.Where(x=>x.UserID==UserId).Include(x => x.Asset).OrderByDescending(x=>x.TotalValue).ToListAsync();
 
             return portfolios;
         }
 
         [HttpGet]
         [Route("PortfolioHistory")]
-        public IEnumerable<PortfolioHistory> GetPortfolioHistory(DateTime filterDate)
+        public IEnumerable<PortfolioHistory> GetPortfolioHistory(DateTime filterDate, long userId)
         {
-            return _dbContext.PortfolioHistory.Where(x=>x.Date >=filterDate);
+            return _dbContext.PortfolioHistory.Where(x=>x.Date >=filterDate && x.UserID == userId);
         }
 
         [HttpGet]
@@ -52,32 +53,32 @@ namespace PortfolioTracker.Server.Controllers
 
 
         [HttpPost]
-        [Route("UpdateAssets")]
-        public async Task<IActionResult> UpdateAssets()
+        [Route("UpdateAssets/{userId}")]
+        public async Task<IActionResult> UpdateAssets(long userId)
         {
             await _assetService.UpdateAssets();
-            await _portfolioService.UpdatePortfolio();
+            await _portfolioService.UpdatePortfolio(userId);
             return Ok();
         }
 
         [HttpPost]
-        [Route("DeleteAccount")]
-        public async Task DeleteAccountPortfolio()
+        [Route("DeleteAccount/{userId}")]
+        public async Task DeleteAccountPortfolio(long userId)
         {
-            await _dbContext.Database.ExecuteSqlRawAsync("truncate table AccountBalance");
-            await _dbContext.Database.ExecuteSqlRawAsync("truncate table Portfolio");
-            await _dbContext.Database.ExecuteSqlRawAsync("truncate table PortfolioHistory");
-            await _dbContext.Database.ExecuteSqlRawAsync("truncate table Transactions");
+            await _dbContext.Database.ExecuteSqlRawAsync($"delete from AccountBalance where UserId= {userId}");
+            await _dbContext.Database.ExecuteSqlRawAsync($"delete from Portfolio where UserId = {userId}");
+            await _dbContext.Database.ExecuteSqlRawAsync($"delete from PortfolioHistory where UserId = {userId}");
+            await _dbContext.Database.ExecuteSqlRawAsync($"delete from Transactions where UserId = {userId}");
         }
 
         [HttpPost]
-        [Route("CreatePortfolioHistory")]
+        [Route("CreatePortfolioHistory/{userId}")]
 
-        public async Task<IActionResult> CreatePortfolioHistory()
+        public async Task<IActionResult> CreatePortfolioHistory(long userId)
         {
             await _assetService.UpdateAssets();
-            await _portfolioService.UpdatePortfolio();
-            await _portfolioHistoryService.CreatePortfolioHistory();
+            await _portfolioService.UpdatePortfolio(userId);
+            await _portfolioHistoryService.CreatePortfolioHistory(userId);
             return Ok();
         }
 
@@ -108,13 +109,13 @@ namespace PortfolioTracker.Server.Controllers
         }
 
         [HttpPost]
-        [Route("CreatePortfolioHistoryOnceWithRealCalcluation")]
+        [Route("CreatePortfolioHistoryOnceWithRealCalcluation/{userId}")]
 
-        public async Task<IActionResult> CreatePortfolioHistoryOnceWitRealCalcluation()
+        public async Task<IActionResult> CreatePortfolioHistoryOnceWitRealCalcluation(long userId)
         {
-            var transactionDate = _dbContext.Transactions.OrderBy(x => x.CreatedOn).First().CreatedOn;
-            var transactions = _dbContext.Transactions.ToList();
-            var accountbalances = _dbContext.AccountBalance.ToList();
+            var transactionDate = _dbContext.Transactions.Where(x=>x.UserID==userId).OrderBy(x => x.CreatedOn).First().CreatedOn;
+            var transactions = _dbContext.Transactions.Where(x => x.UserID == userId).ToList();
+            var accountbalances = _dbContext.AccountBalance.Where(x => x.UserID == userId).ToList();
 
             //ONLY ETFS SUPPORTED ATM and crypto
             var allSupportedAssets = await _dbContext.Assets.Where(x => x.AssetType == AssetType.Etf || x.AssetId == 3 || x.AssetId ==262|| x.AssetType == AssetType.Crypto).ToListAsync();
@@ -152,7 +153,7 @@ namespace PortfolioTracker.Server.Controllers
                 var allAccountbalancesTillDate = accountbalances.Where(x => x.CreatedOn <= transactionDate).ToList();
                 //var totalInvestedForDate = allTransactionUntilDate.Where(x => x.TransactionType != TransactionType.SELL).Sum(x => x.TotalCosts) - allTransactionUntilDate.Where(x => x.TransactionType == TransactionType.SELL).Sum(x => x.TotalCosts);
 
-                var totalInvestedForDate = allAccountbalancesTillDate.Where(x => x.DepositType == DepositType.DEPOSIT || x.DepositType == DepositType.WITHDRAWNTOCARD).Sum(x => x.Value) - allAccountbalancesTillDate.Where(x => x.DepositType == DepositType.WITHDRAW).Sum(x => x.Value);
+                var totalInvestedForDate = allAccountbalancesTillDate.Sum(x => x.Value);
 
                 double totalActualOfAllAssetsValue = 0;
 
@@ -166,6 +167,7 @@ namespace PortfolioTracker.Server.Controllers
                     double totalActualOfAssetValue = 0;
                     var symbolname = allSupportedAssets.FirstOrDefault(x => x.AssetId == transaction.Key)?.SymbolForApi;
 
+                    
                     if (asserthistoryPerSymbols.Exists(x => x.SymbolName == symbolname))
                     {
                         totalActualOfAssetValue = totalShares * asserthistoryPerSymbols.Single(x => x.SymbolName == symbolname).TryGetValueFromDate(transactionDate);
@@ -179,11 +181,19 @@ namespace PortfolioTracker.Server.Controllers
                     totalActualOfAllAssetsValue += totalActualOfAssetValue;
 
                 }
+                
+                var totalSpend = _dbContext.AccountBalance.Where(x => x.DepositType == DepositType.DEPOSIT && x.BrokerType == BrokerType.DEGIRO && x.UserID == userId && x.CreatedOn <= transactionDate).Sum(x => x.Value)
+                    - _dbContext.AccountBalance.Where(x => x.DepositType == DepositType.WITHDRAW && x.BrokerType == BrokerType.DEGIRO && x.UserID == userId && x.CreatedOn <= transactionDate).Sum(x => x.Value);
+                var totalTransactions = _dbContext.Transactions.Where(x=> x.UserID==userId && x.BrokerType == BrokerType.DEGIRO && x.TransactionType == TransactionType.BUY && x.CreatedOn <= transactionDate).Sum(x => x.TotalCosts) - _dbContext.Transactions.Where(x => x.UserID == userId && x.BrokerType == BrokerType.DEGIRO && x.TransactionType == TransactionType.SELL && x.CreatedOn <= transactionDate).Sum(x => x.TotalCosts);
+
+                var cashAsset = _dbContext.Assets.FirstOrDefault(x => x.AssetType == AssetType.Cash);
+
 
                 var portfolioHistory = new PortfolioHistory();
+                portfolioHistory.UserID = userId;
                 portfolioHistory.Date = transactionDate;
                 portfolioHistory.TotalInvestedPortfolioValue = totalInvestedForDate;
-                portfolioHistory.TotalPortfolioValue = Convert.ToDecimal(totalActualOfAllAssetsValue);
+                portfolioHistory.TotalPortfolioValue = Convert.ToDecimal(totalActualOfAllAssetsValue) + totalSpend -totalTransactions;
                 portfolioHistory.Profit = portfolioHistory.TotalPortfolioValue - portfolioHistory.TotalInvestedPortfolioValue;
                 if (portfolioHistory.TotalInvestedPortfolioValue != 0)
                 {

@@ -19,13 +19,13 @@ namespace PortfolioTracker.Server.Controllers
 
 
         [HttpGet]
-        [Route("TotalTransactionCosts")]
-        public async Task<decimal> GetTotalTransactionCosts() => await _dbContext.Transactions.SumAsync(x => x.TransactionCosts);
+        [Route("TotalTransactionCosts/{UserId}")]
+        public async Task<decimal> GetTotalTransactionCosts(long UserId) => await _dbContext.Transactions.Where(x=>x.UserID==UserId).SumAsync(x => x.TransactionCosts);
         
 
         [HttpGet]
-        [Route("TotalTaxes")]
-        public async Task<decimal> GetTotalTaxes() => await _dbContext.Transactions.SumAsync(x => x.TaxesCosts);
+        [Route("TotalTaxes/{UserId}")]
+        public async Task<decimal> GetTotalTaxes(long UserId) => await _dbContext.Transactions.Where(x => x.UserID == UserId).SumAsync(x => x.TaxesCosts);
 
     }
 }

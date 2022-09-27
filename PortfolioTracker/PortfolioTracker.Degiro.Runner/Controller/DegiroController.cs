@@ -24,7 +24,7 @@ namespace PortfolioTracker.Degiro.Runner.Controller
             _logger = logger;
         }
 
-        public async Task ImportDegiro(StreamReader degiroCsvStream)
+        public async Task ImportDegiro(StreamReader degiroCsvStream, long userId)
         {
             var csvConfiguration = new CsvConfiguration(CultureInfo.GetCultureInfo("nl-NL"))
             {
@@ -41,6 +41,7 @@ namespace PortfolioTracker.Degiro.Runner.Controller
                     foreach (var record in records.Where(r => r.OrderID != null && !allOrderIds.Contains(r.OrderID)).GroupBy(x => x.OrderID))
                     {
                         var transaction = new PortfolioTransaction();
+                        transaction.UserID = userId;
                         var isBasicInfoFilled = false;
                         foreach (var degiroOrderRecord in record)
                         {
@@ -92,7 +93,8 @@ namespace PortfolioTracker.Degiro.Runner.Controller
                         BrokerType = BrokerType.DEGIRO,
                         CreatedOn = record.CreatedOnDate,
                         DepositType = DepositType.DEPOSIT,
-                        Value = record.TotalPrice.Value
+                        Value = record.TotalPrice.Value,
+                        UserID=userId
                     };
                     _dbContext.AccountBalance.Add(accountBalance);
                 }

@@ -31,7 +31,8 @@ namespace PortfolioTracker.Server.Controllers
                 TaxesCosts = 0,
                 TransactionCosts = 3.40m,
                 TransactionType = TransactionType.SELL,
-                TotalCosts = 859.931m
+                TotalCosts = 859.931m,
+                UserID = 42069
             });
 
             var usdcAsset = assets.Single(x => x.ISN == "USDC");
@@ -46,7 +47,8 @@ namespace PortfolioTracker.Server.Controllers
                 TaxesCosts = 0,
                 TransactionCosts = 0m,
                 TransactionType = TransactionType.BUY,
-                TotalCosts = 859.931m
+                TotalCosts = 859.931m,
+                UserID = 42069
             });
 
            var croAsset = assets.Single(x => x.ISN == "CRO");
@@ -60,7 +62,8 @@ namespace PortfolioTracker.Server.Controllers
                 TaxesCosts = 0,
                 TransactionCosts = 1m,
                 TransactionType = TransactionType.BUY,
-                TotalCosts = 436m
+                TotalCosts = 436m,
+                UserID = 42069
             });
             transactions.Add(new PortfolioTransaction
             {
@@ -72,7 +75,8 @@ namespace PortfolioTracker.Server.Controllers
                 TaxesCosts = 0,
                 TransactionCosts = 1m,
                 TransactionType = TransactionType.SELL,
-                TotalCosts = 436m
+                TotalCosts = 436m,
+                UserID = 42069
             });
 
             transactions.Add(new PortfolioTransaction
@@ -85,7 +89,8 @@ namespace PortfolioTracker.Server.Controllers
                 TaxesCosts = 0,
                 TransactionCosts = 3m,
                 TransactionType = TransactionType.BUY,
-                TotalCosts = 890.482516m
+                TotalCosts = 890.482516m,
+                UserID = 42069
             });
             transactions.Add(new PortfolioTransaction
             {
@@ -97,7 +102,8 @@ namespace PortfolioTracker.Server.Controllers
                 TaxesCosts = 0,
                 TransactionCosts = 3m,
                 TransactionType = TransactionType.SELL,
-                TotalCosts = 890.482516m
+                TotalCosts = 890.482516m,
+                UserID = 42069
             });
 
             transactions.Add(new PortfolioTransaction
@@ -110,7 +116,8 @@ namespace PortfolioTracker.Server.Controllers
                 TaxesCosts = 0,
                 TransactionCosts = 1m,
                 TransactionType = TransactionType.BUY,
-                TotalCosts = 448.482516m
+                TotalCosts = 448.482516m,
+                UserID = 42069
             });
             transactions.Add(new PortfolioTransaction
             {
@@ -122,8 +129,58 @@ namespace PortfolioTracker.Server.Controllers
                 TaxesCosts = 0,
                 TransactionCosts = 1m,
                 TransactionType = TransactionType.SELL,
-                TotalCosts = 448.482516m
+                TotalCosts = 448.482516m,
+                UserID = 42069
             });
+
+            var ethAsset = assets.Single(x => x.ISN == "ETH");
+            transactions.Add(new PortfolioTransaction
+            {
+                AssetId = ethAsset.AssetId,
+                CreatedOn = new DateTime(2022, 6, 12),
+                AmountOfShares = 0.69067M,
+                BrokerType = BrokerType.CRYTPCOMEXCHANGE,
+                PricePerShare = 1450m,
+                TaxesCosts = 0,
+                TransactionCosts = 1.47m,
+                TransactionType = TransactionType.BUY,
+                TotalCosts = 880.88m,
+                UserID = 42069
+            });
+
+            transactions.Add(new PortfolioTransaction
+            {
+                AssetId = usdcAsset.AssetId,
+                CreatedOn = new DateTime(2022, 6, 12),
+                AmountOfShares = 1001.47m - 5.74111450m,
+                BrokerType = BrokerType.CRYTPCOMEXCHANGE,
+                PricePerShare = 0.88m,
+                TaxesCosts = 0,
+                TransactionCosts = 1m,
+                TransactionType = TransactionType.SELL,
+                TotalCosts = 880.88m,
+                UserID = 42069
+            });
+
+            var icxAsset = assets.Single(x => x.ISN == "ICX");
+
+
+            transactions.Add(new PortfolioTransaction
+            {
+                AssetId = icxAsset.AssetId,
+                CreatedOn = new DateTime(2022, 6, 12),
+                AmountOfShares = 1.19103804m,
+                BrokerType = BrokerType.CRYTPCOMEXCHANGE,
+                PricePerShare = 0.88m,
+                TaxesCosts = 0,
+                TransactionCosts = 1m,
+                TransactionType = TransactionType.BUY,
+                TotalCosts = 1m,
+                UserID = 42069
+            });
+
+            
+
 
             await _dbContext.Transactions.AddRangeAsync(transactions);
             await _dbContext.SaveChangesAsync();
@@ -150,7 +207,8 @@ namespace PortfolioTracker.Server.Controllers
                 TaxesCosts = 0,
                 TransactionCosts = 4m,
                 TransactionType = TransactionType.SELL,
-                TotalCosts=500
+                TotalCosts=500,
+                UserID=42069
             });
 
             var donkAsset = new Asset
@@ -178,7 +236,8 @@ namespace PortfolioTracker.Server.Controllers
                 TaxesCosts = 0,
                 TransactionCosts = 1m,
                 TransactionType = TransactionType.BUY,
-                TotalCosts = 356.7m
+                TotalCosts = 356.7m,
+                UserID = 42069
             });
 
             transactions.Add(new PortfolioTransaction
@@ -191,7 +250,8 @@ namespace PortfolioTracker.Server.Controllers
                 TaxesCosts = 0,
                 TransactionCosts = 1m,
                 TransactionType = TransactionType.SELL,
-                TotalCosts = 397.70m
+                TotalCosts = 397.70m,
+                UserID = 42069
             });
 
             var sunnyAsset = new Asset
@@ -217,7 +277,8 @@ namespace PortfolioTracker.Server.Controllers
                 TaxesCosts = 0,
                 TransactionCosts = 1m,
                 TransactionType = TransactionType.BUY,
-                TotalCosts = 150
+                TotalCosts = 150,
+                UserID = 42069
             });
 
             var croasset = assets.Single(x => x.ISN == "CRO");
@@ -231,7 +292,8 @@ namespace PortfolioTracker.Server.Controllers
                 TaxesCosts = 0,
                 TransactionCosts = 1m,
                 TransactionType = TransactionType.BUY,
-                TotalCosts = 422.75m
+                TotalCosts = 422.75m,
+                UserID = 42069
             });
 
             await _dbContext.Transactions.AddRangeAsync(transactions);
