@@ -78,6 +78,33 @@ else
     <p>Loading...</p>
 }
 
+<div class="row">
+    <div class="col-md-3 p-3">
+        <RadzenCard class="rz-card-portfoliohistory">
+            <h4 class="mb-3">Total value</h4>
+            <p>€ @totalValue.ToString("N2", CultureInfo.CreateSpecificCulture("fr-FR"))</p>
+        </RadzenCard>
+    </div>
+    <div class="col-md-3 p-3">
+        <RadzenCard class="rz-card-portfoliohistory">
+            <h4 class="mb-3">Profit</h4>
+            <p>€ @profit.ToString("N2", CultureInfo.CreateSpecificCulture("fr-FR"))  </p>
+        </RadzenCard>
+    </div>
+    <div class="col-md-3 p-3">
+        <RadzenCard class="rz-card-portfoliohistory">
+            <h4 class="mb-3">Transaction Costs</h4>
+            <p>€ @totalTransactionCosts.ToString("N2", CultureInfo.CreateSpecificCulture("fr-FR"))  </p>
+        </RadzenCard>
+    </div>
+    <div class="col-md-3 p-3">
+        <RadzenCard class="rz-card-portfoliohistory">
+            <h4 class="mb-3">Taxes</h4>
+            <p>€ @totalTaxesCosts.ToString("N2", CultureInfo.CreateSpecificCulture("fr-FR"))</p>
+        </RadzenCard>
+    </div>
+</div>
+
 <RadzenDataGrid AllowColumnResize="true" AllowSorting="true" PageSize="20" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
                 Data="@portfoliosUnRealised" TItem="Portfolio">
     <Columns>
@@ -160,32 +187,6 @@ else
 
 <h3>Portfolio history:</h3>
 
-<div class="row">
-    <div class="col-md-3 p-3">
-        <RadzenCard class="rz-card-portfoliohistory">
-            <h4 class="mb-3">Total value</h4>
-            <p>€ @totalValue.ToString("N2", CultureInfo.CreateSpecificCulture("fr-FR"))</p>
-        </RadzenCard>
-    </div>
-    <div class="col-md-3 p-3">
-        <RadzenCard class="rz-card-portfoliohistory">
-            <h4 class="mb-3">Profit</h4>
-            <p>€ @profit.ToString("N2", CultureInfo.CreateSpecificCulture("fr-FR"))  </p>
-        </RadzenCard>
-    </div>
-    <div class="col-md-3 p-3">
-        <RadzenCard class="rz-card-portfoliohistory">
-            <h4 class="mb-3">Transaction Costs</h4>
-            <p>€ @totalTransactionCosts.ToString("N2", CultureInfo.CreateSpecificCulture("fr-FR"))  </p>
-        </RadzenCard>
-    </div>
-    <div class="col-md-3 p-3">
-        <RadzenCard class="rz-card-portfoliohistory">
-            <h4 class="mb-3">Taxes</h4>
-            <p>€ @totalTaxesCosts.ToString("N2", CultureInfo.CreateSpecificCulture("fr-FR"))</p>
-        </RadzenCard>
-    </div>
-</div>
 
 <div class="container my-5">
     <div class="row">
@@ -253,8 +254,8 @@ else
 
         totalTransactionCosts = await Http.GetFromJsonAsync<decimal>("Transaction/TotalTransactionCosts");
         totalTaxesCosts = await Http.GetFromJsonAsync<decimal>("Transaction/TotalTaxes");
-        profit = portfoliosUnRealised.Sum(x => x.Profit);
         realisedProfit = portfoliosRealised.Sum(x => x.Profit);
+        profit = portfoliosUnRealised.Sum(x => x.Profit) + realisedProfit;
 
         piePortfolioItems = portfoliosUnRealised.Where(x=> x.TotalValue / totalValue * 100 > 5).Select(x => 
                        new PiePortfolioItem

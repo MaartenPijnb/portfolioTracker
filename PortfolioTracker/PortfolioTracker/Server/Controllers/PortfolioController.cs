@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using PortfolioTracker.Implementation.Models;
 using PortfolioTracker.Implementation.Resolvers;
 using PortfolioTracker.Implementation.Services;
 using PortfolioTracker.Model;
+using System.Text.Json.Serialization;
 
 namespace PortfolioTracker.Server.Controllers
 {
@@ -56,6 +58,16 @@ namespace PortfolioTracker.Server.Controllers
             await _assetService.UpdateAssets();
             await _portfolioService.UpdatePortfolio();
             return Ok();
+        }
+
+        [HttpPost]
+        [Route("DeleteAccount")]
+        public async Task DeleteAccountPortfolio()
+        {
+            await _dbContext.Database.ExecuteSqlRawAsync("truncate table AccountBalance");
+            await _dbContext.Database.ExecuteSqlRawAsync("truncate table Portfolio");
+            await _dbContext.Database.ExecuteSqlRawAsync("truncate table PortfolioHistory");
+            await _dbContext.Database.ExecuteSqlRawAsync("truncate table Transactions");
         }
 
         [HttpPost]
@@ -112,8 +124,8 @@ namespace PortfolioTracker.Server.Controllers
             var skippedrecords = 0;
             var asserthistoryPerSymbols = new List<AssetHistory>();
 
-            while (assetsLength !=0)
-            {              
+            while (assetsLength != 0)
+            {
                 var result = new List<AssetHistory>();
                 if (assetsLength >= 5)
                 {
@@ -129,19 +141,24 @@ namespace PortfolioTracker.Server.Controllers
                 }
                 asserthistoryPerSymbols.AddRange(result);
             }
-
+            ////12 mei?
+            //transactionDate = new DateTime(2022, 5, 12);
+            //string readText = System.IO.File.ReadAllText("C:\\portfoliofiles\\test.json");
+            // asserthistoryPerSymbols = JsonConvert.DeserializeObject<List<AssetHistory>>(readText);
             while (transactionDate < DateTime.Now)
             {
+                Console.WriteLine($"handling date : {transactionDate}");
                 var allTransactionUntilDate = transactions.Where(x => x.CreatedOn <= transactionDate).ToList();
                 var allAccountbalancesTillDate = accountbalances.Where(x => x.CreatedOn <= transactionDate).ToList();
-                var totalInvestedForDate = allTransactionUntilDate.Where(x => x.TransactionType != TransactionType.SELL).Sum(x => x.TotalCosts) - allTransactionUntilDate.Where(x => x.TransactionType == TransactionType.SELL).Sum(x => x.TotalCosts);
+                //var totalInvestedForDate = allTransactionUntilDate.Where(x => x.TransactionType != TransactionType.SELL).Sum(x => x.TotalCosts) - allTransactionUntilDate.Where(x => x.TransactionType == TransactionType.SELL).Sum(x => x.TotalCosts);
 
-                //var totalInvestedForDate = allAccountbalancesTillDate.Where(x => x.DepositType == DepositType.DEPOSIT).Sum(x => x.Value) - allAccountbalancesTillDate.Where(x => x.DepositType == DepositType.WITHDRAW).Sum(x => x.Value);
+                var totalInvestedForDate = allAccountbalancesTillDate.Where(x => x.DepositType == DepositType.DEPOSIT || x.DepositType == DepositType.WITHDRAWNTOCARD).Sum(x => x.Value) - allAccountbalancesTillDate.Where(x => x.DepositType == DepositType.WITHDRAW).Sum(x => x.Value);
 
                 double totalActualOfAllAssetsValue = 0;
 
                 foreach (var transaction in allTransactionUntilDate.GroupBy(x => x.AssetId))
                 {
+                    Console.WriteLine($"Handling asset {transaction.Key}");
                     var portfoliohistory = new PortfolioHistory();
                     double totalSharesBought = Convert.ToDouble(transaction.Where(x=> x.TransactionType != TransactionType.SELL).Sum(x => x.AmountOfShares));
                     double totalSharesSold = Convert.ToDouble(transaction.Where(x => x.TransactionType == TransactionType.SELL).Sum(x => x.AmountOfShares));

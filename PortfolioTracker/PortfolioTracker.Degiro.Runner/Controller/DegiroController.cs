@@ -73,8 +73,9 @@ namespace PortfolioTracker.Degiro.Runner.Controller
                                 descriptionContainingAssetInformation = descriptionContainingAssetInformation.Replace(" ", "");
                                 //20@35,55EUR
                                 descriptionContainingAssetInformation = descriptionContainingAssetInformation.Replace("EUR", "");
-                                //20@35,55
-                                var assetInformation = descriptionContainingAssetInformation.Split("@");
+                                descriptionContainingAssetInformation = descriptionContainingAssetInformation.Replace("USD", "");
+                            //20@35,55
+                            var assetInformation = descriptionContainingAssetInformation.Split("@");
                                 transaction.AmountOfShares = decimal.Parse(assetInformation[0]);
                                 transaction.PricePerShare = decimal.Parse(assetInformation[1]);
                             }
