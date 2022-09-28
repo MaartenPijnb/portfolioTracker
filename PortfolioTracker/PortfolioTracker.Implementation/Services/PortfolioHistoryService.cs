@@ -20,7 +20,7 @@ namespace PortfolioTracker.Implementation.Services
             var portfolios = _dbContext.Portfolio.Where(x=>x.UserID==userId).ToList();
             var portfolioHistory = new PortfolioHistory
             {
-                TotalInvestedPortfolioValue = portfolios.Where(x=>x.TotalShares!=0).Sum(x => x.TotalInvestedValue),
+                TotalInvestedPortfolioValue = _dbContext.AccountBalance.Where(x => x.UserID == userId).Sum(x => x.Value),
                 TotalPortfolioValue = portfolios.Where(x => x.TotalShares != 0).Sum(x => x.TotalValue),
                 UserID=userId
             };
