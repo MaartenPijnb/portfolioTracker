@@ -118,7 +118,7 @@ namespace PortfolioTracker.Server.Controllers
             var accountbalances = _dbContext.AccountBalance.Where(x => x.UserID == userId).ToList();
 
             //ONLY ETFS SUPPORTED ATM and crypto
-            var allSupportedAssets = await _dbContext.Assets.Where(x => x.AssetType == AssetType.Etf || x.AssetId == 3 || x.AssetId ==262|| x.AssetType == AssetType.Crypto).ToListAsync();
+            var allSupportedAssets = await _dbContext.Assets.Where(x => x.AssetType == AssetType.Etf  || x.AssetType == AssetType.Aandelen || x.AssetId == 3 || x.AssetId ==262|| x.AssetType == AssetType.Crypto).ToListAsync();
 
             var assets = allSupportedAssets.Select(x => x.SymbolForApi).ToArray();
             var assetsLength = assets.Length;
